@@ -1,13 +1,42 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {} from 'react-native';
 
-// import { Container } from './styles';
+import Icon from 'react-native-vector-icons/AntDesign';
 
-const SelectUser = () => {
+import logo from '../../assets/logo_brasil.jpg';
+
+import Container from '../../components/Container';
+import Button from '../../components/MenuButton';
+
+import {LogoView, MenuView, Logo} from './styles';
+
+const SelectUser = ({navigation}) => {
     return (
-        <View>
-            <Text>Selecione seu usuario</Text>
-        </View>
+        <Container>
+            <LogoView>
+                <Logo source={logo} />
+            </LogoView>
+            <MenuView>
+                <Button
+                    title="Sou candidato"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateSignInScreen');
+                    }}
+                />
+                <Button
+                    title="Sou eleitor"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('VoterSignInScreen');
+                    }}
+                />
+            </MenuView>
+        </Container>
     );
 };
 
