@@ -1,10 +1,13 @@
 import React, {useState, useRef} from 'react';
-import {View} from 'react-native';
+import {View, Image} from 'react-native';
+
+import ImagePicker from 'react-native-image-picker';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
-import {Form} from './styles';
+import Text from '../../../../components/Text';
+import {Form, AboutView, AboutInput, ImagePickerView, Photo} from './styles';
 
 const SignUp = ({navigation}) => {
     const [formIndex, setFormIndex] = useState(1);
@@ -19,12 +22,38 @@ const SignUp = ({navigation}) => {
     const [number, setNumber] = useState('');
     const [id, setId] = useState('');
 
+    const [photo, setPhoto] = useState(null);
+    const [about, setAbout] = useState('');
+
     const confirmEmailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
 
     function handleSignUp() {
-        console.warn('signin up');
+        navigation.replace('CandidateDashBoardScreen');
+    }
+
+    function handleImagePicker() {
+        const options = {
+            noData: true,
+        };
+
+        ImagePicker.launchImageLibrary(options, (response) => {
+            if (response.uri) {
+                let source = response;
+                setPhoto(source);
+                return;
+            } else {
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                    return;
+                }
+                if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                    return;
+                }
+            }
+        });
     }
 
     function firstForm() {
@@ -134,11 +163,49 @@ const SignUp = ({navigation}) => {
         );
     }
 
+    function thirdForm() {
+        return (
+            <>
+                <ImagePickerView onPress={() => handleImagePicker()}>
+                    {photo == null && <Text>Adicione sua foto</Text>}
+                    {photo && <Photo source={{uri: photo.uri}} />}
+                </ImagePickerView>
+                <Button title="Próximo" callback={() => setFormIndex(4)} />
+                <Button
+                    title="Voltar"
+                    background="#ddd"
+                    callback={() => setFormIndex(2)}
+                />
+            </>
+        );
+    }
+
+    function fourthForm() {
+        return (
+            <>
+                <AboutView>
+                    <AboutInput
+                        multiline={true}
+                        numberOfLines={20}
+                        maxLength={600}
+                        placeholder="Sobre o candidato"
+                        value={about}
+                        onChangeText={setAbout}
+                        returnKeyType="send"
+                        onSubmitEditing={handleSignUp}
+                    />
+                    <Button title="Próximo" callback={() => handleSignUp()} />
+                </AboutView>
+            </>
+        );
+    }
+
     return (
         <Container>
             <Form>
                 {formIndex === 1 && firstForm()}
                 {formIndex === 2 && secondForm()}
+                {formIndex === 3 && thirdForm()}
             </Form>
         </Container>
     );
