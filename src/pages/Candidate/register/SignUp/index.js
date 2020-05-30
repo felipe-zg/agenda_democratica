@@ -2,6 +2,8 @@ import React, {useState, useRef} from 'react';
 import {View, Image} from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
@@ -29,7 +31,27 @@ const SignUp = ({navigation}) => {
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
 
+    function getCandidate(uId) {
+        return {
+            name,
+            campaignName,
+            party,
+            number,
+            id,
+            about,
+            uId,
+        };
+    }
+
     function handleSignUp() {
+        auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then((uId) => {
+                database().ref('/candidates').push(getCandidate(uId));
+            })
+            .catch(() => {
+                console.warn('Erro ao criar usuário');
+            });
         navigation.replace('CandidateDashBoardScreen');
     }
 
@@ -150,8 +172,8 @@ const SignUp = ({navigation}) => {
                     onChangeText={setId}
                     autoCorrect={false}
                     autoCapitalize="words"
-                    returnKeyType="next"
-                    onSubmitEditing={() => confirmEmailRef.current.focus()}
+                    returnKeyType="send"
+                    onSubmitEditing={() => setFormIndex(3)}
                 />
                 <Button title="Próximo" callback={() => setFormIndex(3)} />
                 <Button
@@ -206,6 +228,7 @@ const SignUp = ({navigation}) => {
                 {formIndex === 1 && firstForm()}
                 {formIndex === 2 && secondForm()}
                 {formIndex === 3 && thirdForm()}
+                {formIndex === 4 && fourthForm()}
             </Form>
         </Container>
     );

@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {View} from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 import logo from '../../../assets/trump.png';
 import Container from '../../../components/Container';
@@ -13,7 +14,15 @@ const SignIn = ({navigation}) => {
     const passwordRef = useRef();
 
     const handleSignIn = () => {
-        console.warn('Signing in as candidate');
+        auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(() => {
+                console.warn('login efetuado com sucesso');
+                navigation.navigate('CandidateDashboardScreen');
+            })
+            .catch((e) => {
+                console.warn(e);
+            });
     };
 
     return (

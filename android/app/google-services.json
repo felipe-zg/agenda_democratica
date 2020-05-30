@@ -1,40 +1,40 @@
 {
-  "project_info": {
-    "project_number": "263072080680",
-    "firebase_url": "https://agenda-democratica.firebaseio.com",
-    "project_id": "agenda-democratica",
-    "storage_bucket": "agenda-democratica.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:263072080680:android:bc369d085be9761547e61d",
-        "android_client_info": {
-          "package_name": "com.agenda_democratica"
-        }
-      },
-      "oauth_client": [
+    "project_info": {
+        "project_number": "631132512734",
+        "firebase_url": "https://projectdem-b6675.firebaseio.com",
+        "project_id": "projectdem-b6675",
+        "storage_bucket": "projectdem-b6675.appspot.com"
+    },
+    "client": [
         {
-          "client_id": "263072080680-vuea6ms8m3r8pvmvh9dhlnddulhe0eng.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAJE9O1aPMNMZAXSHj-JlyigNvJxpzvq0I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "263072080680-vuea6ms8m3r8pvmvh9dhlnddulhe0eng.apps.googleusercontent.com",
-              "client_type": 3
+            "client_info": {
+                "mobilesdk_app_id": "1:631132512734:android:6bfeb2d785c86b8759fd4f",
+                "android_client_info": {
+                    "package_name": "com.agenda_democratica"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "631132512734-u2c1dsdv8akbaohlnj0q52upttm9mdbd.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyDRVrb-QvETzVaz1VOL5AFAUSiPoUEc3sg"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "631132512734-u2c1dsdv8akbaohlnj0q52upttm9mdbd.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
             }
-          ]
         }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    ],
+    "configuration_version": "1"
 }
