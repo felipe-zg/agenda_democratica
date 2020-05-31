@@ -4,12 +4,20 @@ import {View, Image} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-simple-toast';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
 import Text from '../../../../components/Text';
-import {Form, AboutView, AboutInput, ImagePickerView, Photo} from './styles';
+import {
+    Form,
+    AboutView,
+    AboutInput,
+    ImagePickerTouch,
+    Photo,
+    ButtonsView,
+} from './styles';
 
 const SignUp = ({navigation}) => {
     const [formIndex, setFormIndex] = useState(1);
@@ -20,6 +28,7 @@ const SignUp = ({navigation}) => {
 
     const [name, setName] = useState('');
     const [campaignName, setCampaignName] = useState('');
+    const [viceName, setViceName] = useState('');
     const [party, setParty] = useState('');
     const [number, setNumber] = useState('');
     const [id, setId] = useState('');
@@ -43,16 +52,70 @@ const SignUp = ({navigation}) => {
         };
     }
 
+    // function IsEmail(email) {
+    //     var exclude = /[^@-.w]|^[_@.-]|[._-]{2}|[@.]{2}|(@)[^@]*1/;
+    //     var check = /@[w-]+./;
+    //     var checkend = /.[a-zA-Z]{2,3}$/;
+    //     if (
+    //         email.search(exclude) != -1 ||
+    //         email.search(check) == -1 ||
+    //         email.search(checkend) == -1
+    //     ) {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
+    // }
+
+    function inputsAreEqual(input1, input2) {
+        if (input1 !== input2) {
+            return false;
+        }
+        return true;
+    }
+
+    function handleFirstForm() {
+        if (
+            email === '' ||
+            confirmEmail === '' ||
+            password === '' ||
+            confirmPassword === ''
+        ) {
+            Toast.show('Todos os campos são obrigatórios');
+            return;
+        }
+        if (!inputsAreEqual(email, confirmEmail)) {
+            Toast.show('Os e-mails são diferentes');
+            return;
+        }
+        if (!inputsAreEqual(password, confirmPassword)) {
+            Toast.show('As senhas são diferentes');
+            return;
+        }
+        setFormIndex(2);
+    }
+
     function handleSignUp() {
-        auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then((uId) => {
-                database().ref('/candidates').push(getCandidate(uId));
-            })
-            .catch(() => {
-                console.warn('Erro ao criar usuário');
-            });
-        navigation.replace('CandidateDashBoardScreen');
+        try {
+            auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(async () => {
+                    const user = auth().currentUser;
+                    await user.updateProfile({
+                        displayName: name,
+                    });
+                    let uId = user.uid;
+                    database().ref('/candidates').push(getCandidate(uId));
+
+                    Toast.show('Cadastro realizado com sucesso');
+                    navigation.replace('CandidateDashboardScreen');
+                })
+                .catch((e) => {
+                    Toast.show('Algo deu errado no cadastro :(');
+                });
+        } catch (e) {
+            Toast.show('Algo deu errado no cadastro :(');
+        }
     }
 
     function handleImagePicker() {
@@ -122,7 +185,7 @@ const SignUp = ({navigation}) => {
                     returnKeyType="send"
                     onSubmitEditing={() => setFormIndex(2)}
                 />
-                <Button title="Próximo" callback={() => setFormIndex(2)} />
+                <Button title="Próximo" callback={() => handleFirstForm()} />
             </>
         );
     }
@@ -149,6 +212,15 @@ const SignUp = ({navigation}) => {
                     onSubmitEditing={() => confirmEmailRef.current.focus()}
                 />
                 <Input
+                    placeholder="Nome do vice"
+                    value={viceName}
+                    onChangeText={setViceName}
+                    autoCorrect={false}
+                    autoCapitalize="words"
+                    returnKeyType="next"
+                    onSubmitEditing={() => confirmEmailRef.current.focus()}
+                />
+                <Input
                     placeholder="Partido do candidato"
                     value={party}
                     onChangeText={setParty}
@@ -167,7 +239,7 @@ const SignUp = ({navigation}) => {
                     onSubmitEditing={() => confirmEmailRef.current.focus()}
                 />
                 <Input
-                    placeholder="Número de identificação da candidatura (TSE)"
+                    placeholder="Nº registro da candidatura (TSE)"
                     value={id}
                     onChangeText={setId}
                     autoCorrect={false}
@@ -188,48 +260,55 @@ const SignUp = ({navigation}) => {
     function thirdForm() {
         return (
             <>
-                <ImagePickerView onPress={() => handleImagePicker()}>
+                <ImagePickerTouch onPress={() => handleImagePicker()}>
                     {photo == null && <Text>Adicione sua foto</Text>}
                     {photo && <Photo source={{uri: photo.uri}} />}
-                </ImagePickerView>
-                <Button title="Próximo" callback={() => setFormIndex(4)} />
-                <Button
-                    title="Voltar"
-                    background="#ddd"
-                    callback={() => setFormIndex(2)}
-                />
+                </ImagePickerTouch>
+                <ButtonsView>
+                    <Button title="Próximo" callback={() => setFormIndex(4)} />
+                    <Button
+                        title="Voltar"
+                        background="#ddd"
+                        callback={() => setFormIndex(2)}
+                    />
+                </ButtonsView>
             </>
         );
     }
 
     function fourthForm() {
         return (
-            <>
-                <AboutView>
-                    <AboutInput
-                        multiline={true}
-                        numberOfLines={20}
-                        maxLength={600}
-                        placeholder="Sobre o candidato"
-                        value={about}
-                        onChangeText={setAbout}
-                        returnKeyType="send"
-                        onSubmitEditing={handleSignUp}
-                    />
-                    <Button title="Próximo" callback={() => handleSignUp()} />
-                </AboutView>
-            </>
+            <AboutView>
+                <AboutInput
+                    multiline={true}
+                    numberOfLines={20}
+                    maxLength={600}
+                    placeholder="Sobre o candidato"
+                    value={about}
+                    onChangeText={setAbout}
+                    returnKeyType="send"
+                    onSubmitEditing={handleSignUp}
+                />
+                <Button title="Próximo" callback={() => handleSignUp()} />
+                <Button
+                    title="Voltar"
+                    background="#ddd"
+                    callback={() => setFormIndex(3)}
+                />
+            </AboutView>
         );
     }
 
     return (
         <Container>
-            <Form>
-                {formIndex === 1 && firstForm()}
-                {formIndex === 2 && secondForm()}
-                {formIndex === 3 && thirdForm()}
-                {formIndex === 4 && fourthForm()}
-            </Form>
+            {formIndex !== 3 && (
+                <Form>
+                    {formIndex === 1 && firstForm()}
+                    {formIndex === 2 && secondForm()}
+                    {formIndex === 4 && fourthForm()}
+                </Form>
+            )}
+            {formIndex === 3 && thirdForm()}
         </Container>
     );
 };

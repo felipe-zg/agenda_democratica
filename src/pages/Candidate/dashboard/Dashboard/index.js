@@ -1,6 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import auth from '@react-native-firebase/auth';
 
 import Container from '../../../../components/Container';
 import Button from '../../../../components/MenuButton';
@@ -43,6 +44,17 @@ const Dashboard = ({navigation}) => {
                 iconColor="#fff"
                 callBack={() => {
                     console.warn('Plano de governo');
+                }}
+            />
+            <Button
+                title="Sair"
+                Icon={Icon}
+                iconName="user"
+                iconColor="#f00"
+                callBack={() => {
+                    auth()
+                        .signOut()
+                        .then(() => navigation.replace('SelectUserScreen'));
                 }}
             />
         </Container>

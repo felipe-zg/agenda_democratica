@@ -13,6 +13,8 @@ const SignIn = ({navigation}) => {
     const [password, setPassword] = useState('');
     const passwordRef = useRef();
 
+    const formref = useRef();
+
     const handleSignIn = () => {
         auth()
             .signInWithEmailAndPassword(email, password)
@@ -32,6 +34,13 @@ const SignIn = ({navigation}) => {
             </LogoView>
             <FormView>
                 <Input
+                    name="email"
+                    label="email"
+                    validators={['required', 'isEmail']}
+                    errorMessages={[
+                        'This field is required',
+                        'e-mail inválido',
+                    ]}
                     placeholder="Digite seu e-mail"
                     value={email}
                     onChangeText={setEmail}

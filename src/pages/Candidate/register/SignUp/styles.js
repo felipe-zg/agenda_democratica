@@ -3,15 +3,22 @@ import styled from 'styled-components/native';
 export const Form = styled.ScrollView`
     flex: 1;
     padding: 15px;
+    margin-top: 30px;
 `;
 
-export const ImagePickerView = styled.TouchableOpacity`
+export const ImagePickerTouch = styled.TouchableOpacity`
     flex: 1;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin: 5px;
     align-items: center;
     justify-content: center;
+`;
+
+export const ButtonsView = styled.View`
+    flex: 1;
+    padding: 0 15px 30px 15px;
+    justify-content: flex-end;
 `;
 
 export const AboutView = styled.View`
