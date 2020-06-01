@@ -7,6 +7,7 @@ import SelectUser from './pages/SelectUser';
 //Candidate register pages
 import CandidateSignIn from './pages/Candidate/SignIn';
 import CandidateSignUp from './pages/Candidate/register/SignUp';
+import MayorRegister from './pages/Candidate/register/Mayor';
 import CandidateEventRegister from './pages/Candidate/register/Event';
 
 //Candidate dashboard
@@ -28,6 +29,10 @@ export default function Routes() {
                 <Stack.Screen
                     name="CandidateSignUpScreen"
                     component={CandidateSignUp}
+                />
+                <Stack.Screen
+                    name="MayorRegisterScreen"
+                    component={MayorRegister}
                 />
                 <Stack.Screen
                     name="CandidateEventRegisterScreen"

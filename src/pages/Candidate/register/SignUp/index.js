@@ -1,46 +1,33 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, Image} from 'react-native';
-
-import ImagePicker from 'react-native-image-picker';
-import database from '@react-native-firebase/database';
+import {View} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
+import {RadioButton} from 'react-native-paper';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
 import BackButton from '../../../../components/BackButton';
 import Text from '../../../../components/Text';
-import {
-    Form,
-    AboutView,
-    AboutInput,
-    ImagePickerTouch,
-    Photo,
-    ButtonsView,
-} from './styles';
+import {Form, RadioButtonView} from './styles';
 
 import {
     isEmail,
     isPassword,
-    isFullName,
-    isName,
-    isParty,
-    isId,
     fieldsAreEqual,
     errors,
 } from '../../../../utils/validations';
 import {handleInputChange} from '../../../../utils/handlers';
 
 const SignUp = ({navigation}) => {
-    const [formIndex, setFormIndex] = useState(1);
-    //first form
+    //form
     const [email, setEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isFirstButtondisabled, setIsFirstButtonDisabled] = useState(true);
     const [firstButtonBackground, setFirstButtonBackground] = useState('#ddd');
+    const [office, setOffice] = useState('prefeito');
 
     //first form errors
     const [emailError, setEmailError] = useState(errors.valid);
@@ -50,36 +37,12 @@ const SignUp = ({navigation}) => {
         errors.valid,
     );
 
-    //second form
-    const [name, setName] = useState('');
-    const [campaignName, setCampaignName] = useState('');
-    const [viceName, setViceName] = useState('');
-    const [party, setParty] = useState('');
-    const [number, setNumber] = useState('');
-    const [id, setId] = useState('');
-    const [isSecondButtondisabled, setIsSecondButtonDisabled] = useState(true);
-    const [secondButtonBackground, setSecondButtonBackground] = useState(
-        '#ddd',
-    );
-
-    //second for errors
-    const [nameError, setNameError] = useState(errors.valid);
-    const [campaignNameError, setCampaignNameError] = useState(errors.valid);
-    const [viceNameError, setViceNameError] = useState(errors.valid);
-    const [partyError, setPartyError] = useState(errors.valid);
-    const [numberError, setNumberError] = useState(errors.valid);
-    const [idError, setIdError] = useState(errors.valid);
-
-    //third and fourth forms
-    const [photo, setPhoto] = useState(null);
-    const [about, setAbout] = useState('');
-
     const confirmEmailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
 
     useEffect(() => {
-        if (isFirstFormValid()) {
+        if (isFormValid()) {
             setIsFirstButtonDisabled(false);
             setFirstButtonBackground('#00f');
         } else {
@@ -89,18 +52,7 @@ const SignUp = ({navigation}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email, confirmEmail, password, confirmPassword]);
 
-    useEffect(() => {
-        if (isSecondFormValid()) {
-            setIsSecondButtonDisabled(false);
-            setSecondButtonBackground('#00f');
-        } else {
-            setIsSecondButtonDisabled(true);
-            setSecondButtonBackground('#ddd');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [name, campaignName, viceName, party, number, id]);
-
-    function isFirstFormValid() {
+    function isFormValid() {
         return (
             isEmail(email) &&
             isEmail(confirmEmail) &&
@@ -109,30 +61,7 @@ const SignUp = ({navigation}) => {
         );
     }
 
-    function isSecondFormValid() {
-        return (
-            isFullName(name) &&
-            isName(campaignName) &&
-            isName(viceName) &&
-            isParty(party) &&
-            isParty(number) &&
-            isId(id)
-        );
-    }
-
-    function getCandidate(uId) {
-        return {
-            name,
-            campaignName,
-            party,
-            number,
-            id,
-            about,
-            uId,
-        };
-    }
-
-    function handleFirstForm() {
+    function handleSubmit() {
         if (!fieldsAreEqual(email, confirmEmail)) {
             Toast.show('Os e-mails são diferentes');
             return;
@@ -141,23 +70,21 @@ const SignUp = ({navigation}) => {
             Toast.show('As senhas são diferentes');
             return;
         }
-        setFormIndex(2);
+        handleSignUp();
     }
 
     function handleSignUp() {
         try {
             auth()
                 .createUserWithEmailAndPassword(email, password)
-                .then(async () => {
-                    const user = auth().currentUser;
-                    await user.updateProfile({
-                        displayName: name,
-                    });
-                    let uId = user.uid;
-                    database().ref('/candidates').push(getCandidate(uId));
-
+                .then(() => {
                     Toast.show('Cadastro realizado com sucesso');
-                    navigation.replace('CandidateDashboardScreen');
+                    const nextPage =
+                        office == 'prefeito'
+                            ? 'MayorRegisterScreen'
+                            : 'CandidateDashboardScreen';
+                    navigation.popToTop();
+                    navigation.replace(nextPage);
                 })
                 .catch((e) => {
                     Toast.show('Algo deu errado no cadastro :(');
@@ -167,32 +94,10 @@ const SignUp = ({navigation}) => {
         }
     }
 
-    function handleImagePicker() {
-        const options = {
-            noData: true,
-        };
-
-        ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.uri) {
-                let source = response;
-                setPhoto(source);
-                return;
-            } else {
-                if (response.didCancel) {
-                    console.log('User cancelled image picker');
-                    return;
-                }
-                if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
-                    return;
-                }
-            }
-        });
-    }
-
-    function firstForm() {
-        return (
-            <>
+    return (
+        <Container>
+            <BackButton title="Login" action={() => navigation.goBack()} />
+            <Form>
                 <Text>E-mail</Text>
                 <Text color="#f00" size="8px">
                     {emailError.message}
@@ -288,255 +193,43 @@ const SignUp = ({navigation}) => {
                     secureTextEntry
                     autoCapitalize="none"
                     returnKeyType="send"
-                    onSubmitEditing={() => handleFirstForm()}
+                    onSubmitEditing={() => handleSubmit()}
                 />
+                <View>
+                    <RadioButtonView>
+                        <RadioButton
+                            value="prefeito"
+                            status={
+                                office === 'prefeito' ? 'checked' : 'unchecked'
+                            }
+                            uncheckedColor="#fff"
+                            onPress={() => {
+                                setOffice('prefeito');
+                            }}
+                        />
+                        <Text>Sou candidato a prefeito</Text>
+                    </RadioButtonView>
+                    <RadioButtonView>
+                        <RadioButton
+                            value="vereador"
+                            status={
+                                office === 'vereador' ? 'checked' : 'unchecked'
+                            }
+                            uncheckedColor="#fff"
+                            onPress={() => {
+                                setOffice('vereador');
+                            }}
+                        />
+                        <Text>Sou candidato a vereador</Text>
+                    </RadioButtonView>
+                </View>
                 <Button
                     title="Próximo"
                     disabled={isFirstButtondisabled}
                     background={firstButtonBackground}
-                    callback={() => handleFirstForm()}
+                    callback={() => handleSubmit()}
                 />
-            </>
-        );
-    }
-
-    function secondForm() {
-        return (
-            <>
-                {nameError === errors.valid && <Text>Nome completo</Text>}
-                {nameError === errors.invalidFullName && (
-                    <Text color="#f00" size="8px">
-                        {nameError.message}
-                    </Text>
-                )}
-                <Input
-                    placeholder="Nome completo do candidato"
-                    border={nameError.border}
-                    value={name}
-                    onChangeText={(name) => {
-                        handleInputChange(
-                            name,
-                            setName,
-                            isFullName,
-                            nameError,
-                            setNameError,
-                            errors.invalidFullName,
-                        );
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    returnKeyType="next"
-                    onSubmitEditing={() => confirmEmailRef.current.focus()}
-                />
-
-                {campaignNameError === errors.valid && (
-                    <Text>Nome de campanha</Text>
-                )}
-                {campaignNameError === errors.invalidName && (
-                    <Text color="#f00" size="8px">
-                        {campaignNameError.message}
-                    </Text>
-                )}
-                <Input
-                    placeholder="Nome de campanha do candidato"
-                    border={campaignNameError.border}
-                    value={campaignName}
-                    onChangeText={(campaignName) => {
-                        handleInputChange(
-                            campaignName,
-                            setCampaignName,
-                            isName,
-                            campaignNameError,
-                            setCampaignNameError,
-                            errors.invalidName,
-                        );
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    returnKeyType="next"
-                    onSubmitEditing={() => confirmEmailRef.current.focus()}
-                />
-
-                {viceNameError === errors.valid && <Text>Nome do vice</Text>}
-                {viceNameError === errors.invalidName && (
-                    <Text color="#f00" size="8px">
-                        {viceNameError.message}
-                    </Text>
-                )}
-                <Input
-                    placeholder="Nome do vice"
-                    border={viceNameError.border}
-                    value={viceName}
-                    onChangeText={(viceName) => {
-                        handleInputChange(
-                            viceName,
-                            setViceName,
-                            isName,
-                            viceNameError,
-                            setViceNameError,
-                            errors.invalidName,
-                        );
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    returnKeyType="next"
-                    onSubmitEditing={() => confirmEmailRef.current.focus()}
-                />
-
-                {partyError === errors.valid && <Text>Sigla do partido</Text>}
-                {partyError === errors.invalidParty && (
-                    <Text color="#f00" size="8px">
-                        {partyError.message}
-                    </Text>
-                )}
-                <Input
-                    placeholder="Partido do candidato"
-                    border={partyError.border}
-                    value={party}
-                    onChangeText={(party) => {
-                        handleInputChange(
-                            party,
-                            setParty,
-                            isParty,
-                            partyError,
-                            setPartyError,
-                            errors.invalidParty,
-                        );
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    returnKeyType="next"
-                    onSubmitEditing={() => confirmEmailRef.current.focus()}
-                />
-
-                {numberError === errors.valid && (
-                    <Text>Número do candidato</Text>
-                )}
-                {numberError === errors.invalidNumber && (
-                    <Text color="#f00" size="8px">
-                        {numberError.message}
-                    </Text>
-                )}
-                <Input
-                    placeholder="Número do candidato"
-                    border={numberError.border}
-                    maxLength={2}
-                    value={number}
-                    onChangeText={(number) => {
-                        handleInputChange(
-                            number,
-                            setNumber,
-                            isParty,
-                            numberError,
-                            setNumberError,
-                            errors.invalidNumber,
-                        );
-                    }}
-                    keyboardType="numeric"
-                    autoCorrect={false}
-                    returnKeyType="next"
-                    onSubmitEditing={() => confirmEmailRef.current.focus()}
-                />
-
-                {idError === errors.valid && <Text>Número do candidato</Text>}
-                {idError === errors.invalidId && (
-                    <Text color="#f00" size="8px">
-                        {idError.message}
-                    </Text>
-                )}
-                <Input
-                    placeholder="Nº registro da candidatura (TSE)"
-                    border={idError.border}
-                    value={id}
-                    onChangeText={(id) => {
-                        handleInputChange(
-                            id,
-                            setId,
-                            isId,
-                            idError,
-                            setIdError,
-                            errors.invalidId,
-                        );
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    returnKeyType="send"
-                    onSubmitEditing={() => setFormIndex(3)}
-                />
-
-                <Button
-                    title="Próximo"
-                    disabled={isSecondButtondisabled}
-                    background={secondButtonBackground}
-                    callback={() => setFormIndex(3)}
-                />
-                <Button
-                    title="Voltar"
-                    background="#ddd"
-                    callback={() => setFormIndex(1)}
-                />
-            </>
-        );
-    }
-
-    function thirdForm() {
-        return (
-            <>
-                <ImagePickerTouch onPress={() => handleImagePicker()}>
-                    {photo == null && <Text>Adicione sua foto</Text>}
-                    {photo && <Photo source={{uri: photo.uri}} />}
-                </ImagePickerTouch>
-                <ButtonsView>
-                    <Button
-                        title="Próximo"
-                        disabled={photo == null ? true : false}
-                        background={photo == null ? '#ddd' : '#00f'}
-                        callback={() => setFormIndex(4)}
-                    />
-                    <Button
-                        title="Voltar"
-                        background="#ddd"
-                        callback={() => setFormIndex(2)}
-                    />
-                </ButtonsView>
-            </>
-        );
-    }
-
-    function fourthForm() {
-        return (
-            <AboutView>
-                <AboutInput
-                    multiline={true}
-                    numberOfLines={20}
-                    maxLength={600}
-                    placeholder="Sobre o candidato"
-                    value={about}
-                    onChangeText={setAbout}
-                    returnKeyType="send"
-                    onSubmitEditing={handleSignUp}
-                />
-                <Button title="Próximo" callback={() => handleSignUp()} />
-                <Button
-                    title="Voltar"
-                    background="#ddd"
-                    callback={() => setFormIndex(3)}
-                />
-            </AboutView>
-        );
-    }
-
-    return (
-        <Container>
-            <BackButton title="Login" action={() => navigation.goBack()} />
-            {formIndex !== 3 && (
-                <Form>
-                    {formIndex === 1 && firstForm()}
-                    {formIndex === 2 && secondForm()}
-                    {formIndex === 4 && fourthForm()}
-                </Form>
-            )}
-            {formIndex === 3 && thirdForm()}
+            </Form>
         </Container>
     );
 };
