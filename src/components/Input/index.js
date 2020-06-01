@@ -5,7 +5,7 @@ export default styled.TextInput.attrs({
 })`
     color: #e3e3e3;
     padding: 10px 10px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     border-radius: 5px;
     background: #363636;
     border: ${(props) => props.border};

@@ -10,45 +10,8 @@ import Button from '../../../components/Button';
 import Text from '../../../components/Text';
 import {LogoView, FormView, Logo, SignUpLink} from './styles';
 
-const isEmailValid = (email) => {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-};
-
-const isPasswordValid = (password) => {
-    return password.length >= 6;
-};
-
-const errors = {
-    invalidEmail: {
-        border: '1px solid #f00',
-        message: 'E-mail inválido',
-    },
-    invalidPassword: {
-        border: '1px solid #f00',
-        message: 'Minimo de 6 caracteres',
-    },
-    valid: {
-        border: 'none',
-        message: '',
-    },
-};
-
-const handleInputChange = (
-    value,
-    setInputValue,
-    validator,
-    currentState,
-    setError,
-    invalidState,
-) => {
-    if (validator(value) && currentState === invalidState) {
-        setError(errors.valid);
-    } else if (!validator(value) && currentState === errors.valid) {
-        setError(invalidState);
-    }
-    setInputValue(value);
-};
+import {isEmail, isPassword, errors} from '../../../utils/validations';
+import {handleInputChange} from '../../../utils/handlers';
 
 const SignIn = ({navigation}) => {
     const [email, setEmail] = useState('');
@@ -61,7 +24,7 @@ const SignIn = ({navigation}) => {
     const passwordRef = useRef();
 
     useEffect(() => {
-        if (isEmailValid(email) && isPasswordValid(password)) {
+        if (isEmail(email) && isPassword(password)) {
             setIsButtonDisabled(false);
             setButtonColor('#00f');
         } else {
@@ -107,7 +70,7 @@ const SignIn = ({navigation}) => {
                         handleInputChange(
                             email,
                             setEmail,
-                            isEmailValid,
+                            isEmail,
                             emailError,
                             setEmailError,
                             errors.invalidEmail,
@@ -132,7 +95,7 @@ const SignIn = ({navigation}) => {
                         handleInputChange(
                             password,
                             setPassword,
-                            isPasswordValid,
+                            isPassword,
                             passwordError,
                             setPasswordError,
                             errors.invalidPassword,

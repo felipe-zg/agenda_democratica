@@ -1,9 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Form = styled.ScrollView`
-    flex: 1;
     padding: 15px;
-    margin-top: 30px;
 `;
 
 export const ImagePickerTouch = styled.TouchableOpacity`
