@@ -24,8 +24,3 @@ export const SignUpLink = styled.TouchableOpacity`
     justify-content: center;
     margin-top: 80px;
 `;
-
-export const Text = styled.Text`
-    color: #fff;
-    font-size: 10px;
-`;
