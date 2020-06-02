@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import ImagePicker from 'react-native-image-picker';
-import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+// import storage from '@react-native-firebase/storage';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
@@ -27,21 +27,21 @@ import {
 } from '../../../../utils/validations';
 import {handleInputChange} from '../../../../utils/handlers';
 
-async function persistPhoto(uId, filePath) {
-    const storageRef = storage().ref('profile');
-    const endPath = storageRef.child(uId + '/profilePhoto.jpg');
-    await endPath.putFile(filePath);
-}
+// async function persistPhoto(uId, filePath) {
+//     const storageRef = storage().ref('profile');
+//     const endPath = storageRef.child(uId + '/profilePhoto.jpg');
+//     await endPath.putFile(filePath);
+// }
 
-async function getPhotoDownloadUrl(uId) {
-    const storageRef = storage().ref('profile/' + uId + '/profilePhoto.jpg');
-    try {
-        const url = await storageRef.getDownloadURL();
-        return url;
-    } catch (err) {
-        console.log(err);
-    }
-}
+// async function getPhotoDownloadUrl(uId) {
+//     const storageRef = storage().ref('profile/' + uId + '/profilePhoto.jpg');
+//     try {
+//         const url = await storageRef.getDownloadURL();
+//         return url;
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 const Mayor = () => {
     //second form
@@ -80,16 +80,16 @@ const Mayor = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, campaignName, viceName, party, number, id]);
 
-    async function handleRegister() {
-        const user = auth().currentUser;
-        await persistPhoto(user.uid, photo.path);
-        const downloadUrl = await getPhotoDownloadUrl(user.uid);
-        await user.updateProfile({
-            displayName: name,
-            photoURL: downloadUrl,
-        });
-        database().ref('/candidates').push(getCandidate(user.uId));
-    }
+    // async function handleRegister() {
+    //     const user = auth().currentUser;
+    //     await persistPhoto(user.uid, photo.path);
+    //     const downloadUrl = await getPhotoDownloadUrl(user.uid);
+    //     await user.updateProfile({
+    //         displayName: name,
+    //         photoURL: downloadUrl,
+    //     });
+    //     database().ref('/candidates').push(getCandidate(user.uId));
+    // }
 
     function isFirstFormValid() {
         return (
@@ -334,9 +334,16 @@ const Mayor = () => {
                     value={about}
                     onChangeText={setAbout}
                     returnKeyType="send"
-                    onSubmitEditing={handleRegister}
+                    onSubmitEditing={
+                        () => console.warn('descomentar') /*handleRegister*/
+                    }
                 />
-                <Button title="Próximo" callback={() => handleRegister()} />
+                <Button
+                    title="Próximo"
+                    callback={
+                        () => console.warn('descomentar') /*handleRegister()*/
+                    }
+                />
                 <Button
                     title="Voltar"
                     background="#ddd"

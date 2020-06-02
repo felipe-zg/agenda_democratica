@@ -24,7 +24,7 @@ const SelectUser = ({navigation}) => {
                     iconColor="#fff"
                     callBack={() => {
                         navigation.navigate('SignInScreen', {
-                            signUpScren: 'CandidateSignUpScreen',
+                            signUpScreen: 'CandidateSignUpScreen',
                         });
                     }}
                 />

@@ -3,7 +3,7 @@ import {View, ToastAndroid} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
 
-import logo from '../../../assets/trump.png';
+// import logo from '../../../assets/trump.png';
 import Container from '../../components/Container';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -49,9 +49,9 @@ const SignIn = ({route, navigation}) => {
 
     return (
         <Container>
-            <LogoView>
+            {/*<LogoView>
                 <Logo source={logo} />
-            </LogoView>
+            </LogoView>*/}
             <FormView>
                 <Text>E-mail:</Text>
                 <Text color="#f00" size="8px">

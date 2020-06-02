@@ -1,3 +1,4 @@
+import React from 'react';
 import Signin from '~/pages/SignIn';
 import {render, fireEvent} from '@testing-library/react-native';
 
