@@ -4,16 +4,16 @@ import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
 
 import logo from '../../../assets/trump.png';
-import Container from '../../../components/Container';
-import Input from '../../../components/Input';
-import Button from '../../../components/Button';
-import Text from '../../../components/Text';
+import Container from '../../components/Container';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
 import {LogoView, FormView, Logo, SignUpLink} from './styles';
 
-import {isEmail, isPassword, errors} from '../../../utils/validations';
-import {handleInputChange} from '../../../utils/handlers';
+import {isEmail, isPassword, errors} from '../../utils/validations';
+import {handleInputChange} from '../../utils/handlers';
 
-const SignIn = ({navigation}) => {
+const SignIn = ({route, navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState(errors.valid);
@@ -32,6 +32,8 @@ const SignIn = ({navigation}) => {
             setButtonColor('#ddd');
         }
     }, [email, password]);
+
+    const {signUpScreen} = route.params;
 
     const handleSignIn = () => {
         auth()
@@ -56,13 +58,7 @@ const SignIn = ({navigation}) => {
                     {emailError.message}
                 </Text>
                 <Input
-                    name="email"
-                    label="email"
-                    validators={['required', 'isEmail']}
-                    errorMessages={[
-                        'This field is required',
-                        'e-mail inválido',
-                    ]}
+                    testID="email-input"
                     placeholder="Digite seu e-mail"
                     border={emailError.border}
                     value={email}
@@ -87,6 +83,7 @@ const SignIn = ({navigation}) => {
                     {passwordError.message}
                 </Text>
                 <Input
+                    testID="password-input"
                     ref={passwordRef}
                     placeholder="Digite sua senha"
                     border={passwordError.border}
@@ -107,15 +104,13 @@ const SignIn = ({navigation}) => {
                     onSubmitEditing={() => handleSignIn()}
                 />
                 <Button
+                    testId="signin-button"
                     title="Entrar"
                     background={buttonColor}
                     disabled={isButtonDisabled}
                     callback={handleSignIn}
                 />
-                <SignUpLink
-                    onPress={() =>
-                        navigation.navigate('CandidateSignUpScreen')
-                    }>
+                <SignUpLink onPress={() => navigation.navigate(signUpScreen)}>
                     <Text size="10px">Cadastre-se</Text>
                 </SignUpLink>
             </FormView>

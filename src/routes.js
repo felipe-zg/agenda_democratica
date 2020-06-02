@@ -4,8 +4,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import SelectUser from './pages/SelectUser';
 
+import SignIn from './pages/SignIn';
+
 //Candidate register pages
-import CandidateSignIn from './pages/Candidate/SignIn';
 import CandidateSignUp from './pages/Candidate/register/SignUp';
 import MayorRegister from './pages/Candidate/register/Mayor';
 import CandidateEventRegister from './pages/Candidate/register/Event';
@@ -22,10 +23,7 @@ export default function Routes() {
                 initialRouteName="SelectUserScreen"
                 headerMode="none">
                 <Stack.Screen name="SelectUserScreen" component={SelectUser} />
-                <Stack.Screen
-                    name="CandidateSignInScreen"
-                    component={CandidateSignIn}
-                />
+                <Stack.Screen name="SignInScreen" component={SignIn} />
                 <Stack.Screen
                     name="CandidateSignUpScreen"
                     component={CandidateSignUp}

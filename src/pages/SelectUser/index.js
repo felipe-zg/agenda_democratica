@@ -23,7 +23,9 @@ const SelectUser = ({navigation}) => {
                     iconName="user"
                     iconColor="#fff"
                     callBack={() => {
-                        navigation.navigate('CandidateSignInScreen');
+                        navigation.navigate('SignInScreen', {
+                            signUpScren: 'CandidateSignUpScreen',
+                        });
                     }}
                 />
                 <Button
@@ -31,8 +33,10 @@ const SelectUser = ({navigation}) => {
                     Icon={Icon}
                     iconName="user"
                     iconColor="#fff"
-                    callBack={() => {
-                        navigation.navigate('VoterSignInScreen');
+                    ccallBack={() => {
+                        navigation.navigate('SignInScreen', {
+                            signUpScren: 'VoterSignUpScreen',
+                        });
                     }}
                 />
             </MenuView>
