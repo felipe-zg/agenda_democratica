@@ -20,7 +20,6 @@ const SignIn = ({route, navigation}) => {
     const [passwordError, setPasswordError] = useState(errors.valid);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [buttonColor, setButtonColor] = useState('#0ff');
-
     const passwordRef = useRef();
 
     useEffect(() => {
@@ -33,7 +32,13 @@ const SignIn = ({route, navigation}) => {
         }
     }, [email, password]);
 
-    const {signUpScreen} = route.params;
+    // RECEBER O PROPRIEDADE DE TELA DE CADASTRO E PASSÁ-LA PARA O LINK DE CADASTRO SEM O ID
+    // ERRO DO JEST DIZENDO QUE ROUTE ERA NULL
+    var signUpScreenToGo = '';
+    if (route) {
+        const {signUpScreen} = route.params;
+        signUpScreenToGo = signUpScreen;
+    }
 
     const handleSignIn = () => {
         auth()
@@ -54,7 +59,10 @@ const SignIn = ({route, navigation}) => {
             </LogoView>*/}
             <FormView>
                 <Text>E-mail:</Text>
-                <Text color="#f00" size="8px">
+                <Text
+                    color="#f00"
+                    size="8px"
+                    testID="email-input-error-message">
                     {emailError.message}
                 </Text>
                 <Input
@@ -79,7 +87,10 @@ const SignIn = ({route, navigation}) => {
                     onSubmitEditing={() => passwordRef.current.focus()}
                 />
                 <Text>Senha:</Text>
-                <Text color="#f00" size="8px">
+                <Text
+                    color="#f00"
+                    size="8px"
+                    testID="password-input-error-message">
                     {passwordError.message}
                 </Text>
                 <Input
@@ -104,13 +115,14 @@ const SignIn = ({route, navigation}) => {
                     onSubmitEditing={() => handleSignIn()}
                 />
                 <Button
-                    testId="signin-button"
+                    testID="signIn-button"
                     title="Entrar"
                     background={buttonColor}
                     disabled={isButtonDisabled}
                     callback={handleSignIn}
                 />
-                <SignUpLink onPress={() => navigation.navigate(signUpScreen)}>
+                <SignUpLink
+                    onPress={() => navigation.navigate(signUpScreenToGo)}>
                     <Text size="10px">Cadastre-se</Text>
                 </SignUpLink>
             </FormView>
