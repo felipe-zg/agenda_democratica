@@ -7,12 +7,12 @@ import SelectUser from './pages/SelectUser';
 import SignIn from './pages/SignIn';
 
 //Candidate register pages
-import CandidateSignUp from './pages/Candidate/register/SignUp';
-import MayorRegister from './pages/Candidate/register/Mayor';
-import CandidateEventRegister from './pages/Candidate/register/Event';
+import CandidateSignUp from './pages/candidate/register/SignUp';
+import MayorRegister from './pages/candidate/register/Mayor';
+import CandidateEventRegister from './pages/candidate/register/Event';
 
 //Candidate dashboard
-import CandidateDashboardMenu from './pages/Candidate/dashboard/Dashboard';
+import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
 
 const Stack = createStackNavigator();
 
