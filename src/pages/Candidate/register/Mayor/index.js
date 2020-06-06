@@ -148,6 +148,7 @@ const Mayor = ({navigation}) => {
                     </Text>
                 )}
                 <Input
+                    testID="name-input"
                     placeholder="Nome completo do candidato"
                     border={nameError.border}
                     value={name}
@@ -174,6 +175,7 @@ const Mayor = ({navigation}) => {
                     </Text>
                 )}
                 <Input
+                    testID="campaignName-input"
                     placeholder="Nome de campanha do candidato"
                     border={campaignNameError.border}
                     value={campaignName}
@@ -198,6 +200,7 @@ const Mayor = ({navigation}) => {
                     </Text>
                 )}
                 <Input
+                    testID="viceName-input"
                     placeholder="Nome do vice"
                     border={viceNameError.border}
                     value={viceName}
@@ -222,6 +225,7 @@ const Mayor = ({navigation}) => {
                     </Text>
                 )}
                 <Input
+                    testID="party-input"
                     placeholder="Partido do candidato"
                     border={partyError.border}
                     value={party}
@@ -248,6 +252,7 @@ const Mayor = ({navigation}) => {
                     </Text>
                 )}
                 <Input
+                    testID="partyNumber-input"
                     placeholder="Número do candidato"
                     border={numberError.border}
                     maxLength={2}
@@ -266,13 +271,14 @@ const Mayor = ({navigation}) => {
                     autoCorrect={false}
                 />
 
-                {idError === errors.valid && <Text>Número do candidato</Text>}
+                {idError === errors.valid && <Text>Número de registro</Text>}
                 {idError === errors.invalidId && (
                     <Text color="#f00" size="8px">
                         {idError.message}
                     </Text>
                 )}
                 <Input
+                    testID="registerNumber-input"
                     placeholder="Nº registro da candidatura (TSE)"
                     border={idError.border}
                     value={id}
@@ -291,6 +297,7 @@ const Mayor = ({navigation}) => {
                 />
 
                 <Button
+                    testID="first-form-next-button"
                     title="Próximo"
                     disabled={isSecondButtondisabled}
                     background={secondButtonBackground}
@@ -305,10 +312,13 @@ const Mayor = ({navigation}) => {
             <>
                 <ImagePickerTouch onPress={() => handleImagePicker()}>
                     {photo == null && <Text>Adicione sua foto</Text>}
-                    {photo && <Photo source={{uri: photo.uri}} />}
+                    {photo && (
+                        <Photo testID="photo" source={{uri: photo.uri}} />
+                    )}
                 </ImagePickerTouch>
                 <ButtonsView>
                     <Button
+                        testID="second-form-next-button"
                         title="Próximo"
                         disabled={photo == null ? true : false}
                         background={photo == null ? '#ddd' : '#00f'}

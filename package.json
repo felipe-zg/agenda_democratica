@@ -8,6 +8,7 @@
         "start": "react-native start",
         "build": "react-native build",
         "test": "jest",
+        "coverage": "jest --coverage --watchAll=false",
         "eject": "react-scripts eject",
         "lint": "eslint ."
     },
@@ -19,6 +20,7 @@
         "@react-native-firebase/storage": "^7.1.3",
         "@react-navigation/native": "^5.4.3",
         "@react-navigation/stack": "^5.4.0",
+        "immer": "^6.0.9",
         "react": "16.11.0",
         "react-native": "0.62.2",
         "react-native-gesture-handler": "^1.6.1",
@@ -29,6 +31,8 @@
         "react-native-screens": "^2.8.0",
         "react-native-simple-toast": "^1.1.2",
         "react-native-vector-icons": "^6.6.0",
+        "react-redux": "^7.2.0",
+        "redux": "^4.0.5",
         "styled-components": "^5.1.0"
     },
     "devDependencies": {
@@ -55,7 +59,7 @@
         "collectCoverageFrom": [
             "!src/service/api.js"
         ],
-        "coverageDirectory": "__teste__/coverage",
+        "coverageDirectory": "__tests__/coverage",
         "moduleNameMapper": {
             "^~/(.*)": "<rootDir>/src/$1"
         },

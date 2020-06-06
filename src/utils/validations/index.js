@@ -24,6 +24,10 @@ export const isId = (id) => {
     return id.trim().length >= 10;
 };
 
+export const isCep = (cep) => {
+    return cep.trim().length === 8;
+};
+
 export const fieldsAreEqual = (firstField, secondField) => {
     return firstField === secondField;
 };
@@ -51,11 +55,15 @@ export const errors = {
     },
     invalidNumber: {
         border: '1px solid #f00',
-        message: 'Número inválida',
+        message: 'Número inválido',
     },
     invalidId: {
         border: '1px solid #f00',
         message: 'identificação inválida',
+    },
+    invalidCep: {
+        border: '1px solid #f00',
+        message: 'CEP inválido',
     },
     valid: {
         border: 'none',

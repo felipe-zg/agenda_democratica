@@ -10,6 +10,7 @@ import SignIn from './pages/SignIn';
 import CandidateSignUp from './pages/candidate/register/SignUp';
 import MayorRegister from './pages/candidate/register/Mayor';
 import CandidateEventRegister from './pages/candidate/register/Event';
+import CandidateAddressRegister from './pages/candidate/register/Address';
 
 //Candidate dashboard
 import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
@@ -20,7 +21,7 @@ export default function Routes() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="SelectUserScreen"
+                initialRouteName="CandidateDashboardScreen"
                 headerMode="none">
                 <Stack.Screen name="SelectUserScreen" component={SelectUser} />
                 <Stack.Screen name="SignInScreen" component={SignIn} />
@@ -35,6 +36,10 @@ export default function Routes() {
                 <Stack.Screen
                     name="CandidateEventRegisterScreen"
                     component={CandidateEventRegister}
+                />
+                <Stack.Screen
+                    name="CandidateAddressRegisterScreen"
+                    component={CandidateAddressRegister}
                 />
                 <Stack.Screen
                     name="CandidateDashboardScreen"

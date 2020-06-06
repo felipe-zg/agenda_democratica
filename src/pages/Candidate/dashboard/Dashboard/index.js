@@ -16,7 +16,7 @@ const Dashboard = ({navigation}) => {
                 iconName="user"
                 iconColor="#fff"
                 callBack={() => {
-                    console.warn('Novo evento');
+                    navigation.navigate('CandidateEventRegisterScreen');
                 }}
             />
             <Button
@@ -26,6 +26,24 @@ const Dashboard = ({navigation}) => {
                 iconColor="#fff"
                 callBack={() => {
                     console.warn('Meus eventos');
+                }}
+            />
+            <Button
+                title="Novo endereço"
+                Icon={Icon}
+                iconName="user"
+                iconColor="#fff"
+                callBack={() => {
+                    navigation.navigate('CandidateAddressRegisterScreen');
+                }}
+            />
+            <Button
+                title="Meus endereços"
+                Icon={Icon}
+                iconName="user"
+                iconColor="#fff"
+                callBack={() => {
+                    console.warn('Meus endereços');
                 }}
             />
             <Button

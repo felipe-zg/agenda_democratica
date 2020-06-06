@@ -99,10 +99,14 @@ const SignUp = ({navigation}) => {
             <BackButton title="Login" action={() => navigation.goBack()} />
             <Form>
                 <Text>E-mail</Text>
-                <Text color="#f00" size="8px">
+                <Text
+                    testID="email-input-error-message"
+                    color="#f00"
+                    size="8px">
                     {emailError.message}
                 </Text>
                 <Input
+                    testID="email-input"
                     placeholder="Digite seu e-mail"
                     border={emailError.border}
                     value={email}
@@ -123,10 +127,14 @@ const SignUp = ({navigation}) => {
                     onSubmitEditing={() => confirmEmailRef.current.focus()}
                 />
                 <Text>Confirme seu E-mail</Text>
-                <Text color="#f00" size="8px">
+                <Text
+                    testID="confirmEmail-input-error-message"
+                    color="#f00"
+                    size="8px">
                     {confirmEmailError.message}
                 </Text>
                 <Input
+                    testID="confirmEmail-input"
                     ref={confirmEmailRef}
                     placeholder="Confirme seu e-mail"
                     border={confirmEmailError.border}
@@ -148,10 +156,14 @@ const SignUp = ({navigation}) => {
                     onSubmitEditing={() => passwordRef.current.focus()}
                 />
                 <Text>Senha</Text>
-                <Text color="#f00" size="8px">
+                <Text
+                    testID="password-input-error-message"
+                    color="#f00"
+                    size="8px">
                     {passwordError.message}
                 </Text>
                 <Input
+                    testID="password-input"
                     ref={passwordRef}
                     placeholder="Digite sua senha"
                     border={passwordError.border}
@@ -172,10 +184,14 @@ const SignUp = ({navigation}) => {
                     onSubmitEditing={() => confirmPasswordRef.current.focus()}
                 />
                 <Text>Confirme sua senha</Text>
-                <Text color="#f00" size="8px">
+                <Text
+                    testID="confirmPassword-input-error-message"
+                    color="#f00"
+                    size="8px">
                     {confirmPasswordError.message}
                 </Text>
                 <Input
+                    testID="confirmPassword-input"
                     ref={confirmPasswordRef}
                     placeholder="Digite sua senha"
                     border={confirmPasswordError.border}
@@ -224,6 +240,7 @@ const SignUp = ({navigation}) => {
                     </RadioButtonView>
                 </View>
                 <Button
+                    testID="signUp-button"
                     title="Próximo"
                     disabled={isFirstButtondisabled}
                     background={firstButtonBackground}
