@@ -43,7 +43,7 @@ const Dashboard = ({navigation}) => {
                 iconName="user"
                 iconColor="#fff"
                 callBack={() => {
-                    console.warn('Meus endereços');
+                    navigation.navigate('CandidateAddressesListScreen');
                 }}
             />
             <Button

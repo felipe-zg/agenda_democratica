@@ -14,6 +14,7 @@ import CandidateAddressRegister from './pages/candidate/register/Address';
 
 //Candidate dashboard
 import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
+import AddressesList from './pages/candidate/dashboard/AddressesList';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,10 @@ export default function Routes() {
                 <Stack.Screen
                     name="CandidateDashboardScreen"
                     component={CandidateDashboardMenu}
+                />
+                <Stack.Screen
+                    name="CandidateAddressesListScreen"
+                    component={AddressesList}
                 />
             </Stack.Navigator>
         </NavigationContainer>

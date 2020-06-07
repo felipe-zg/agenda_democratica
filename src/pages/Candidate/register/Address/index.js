@@ -1,4 +1,9 @@
 import React, {useState, useEffect, isValidElement} from 'react';
+import {useDispatch} from 'react-redux';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+
+import {addAddress} from '../../../../store/modules/Address/actions';
 
 import {isCep, errors} from '../../../../utils/validations';
 import {handleInputChange} from '../../../../utils/handlers';
@@ -19,6 +24,8 @@ const Address = ({navigation}) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [buttonBackground, setButtonBackground] = useState('#ddd');
     const [cepError, setCepError] = useState(errors.valid);
+
+    const dispacth = useDispatch();
 
     useEffect(() => {
         if (!formHasEmptyInput() && isCep(cep)) {
@@ -45,8 +52,25 @@ const Address = ({navigation}) => {
         );
     }
 
-    function handleRegister() {
-        console.warn('registrando endereço');
+    function getAddress(addressKey) {
+        return {
+            street,
+            county,
+            number,
+            city,
+            cep,
+            addressKey,
+        };
+    }
+
+    async function handleRegister() {
+        const user = auth().currentUser;
+        const ref = database().ref(`/addresses/${user.uid}`);
+        const addressKey = ref.push().key;
+        const address = getAddress(addressKey);
+        ref.child(addressKey).set(address);
+        dispacth(addAddress(address));
+        navigation.replace('CandidateAddressesListScreen');
     }
 
     return (

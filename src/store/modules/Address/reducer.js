@@ -1,6 +1,6 @@
 import {produce} from 'immer';
 
-export default function Addresses(state = null, action) {
+export default function Addresses(state = [], action) {
     switch (action.type) {
         case '@Address/START_ADDRESSES_LIST': {
             if (action.addresses.length > 0) {
@@ -11,11 +11,16 @@ export default function Addresses(state = null, action) {
         }
         case '@Address/ADD_ADDRESS': {
             return produce(state, (draft) => {
-                if (draft == null) {
-                    draft = new Array(action.address);
-                } else {
-                    draft.push(action.address);
-                }
+                draft.push(action.address);
+            });
+        }
+        case '@Address/DELETE_ADDRESS': {
+            return produce(state, (draft) => {
+                console.warn('reducer');
+                const index = draft.findIndex(
+                    (a) => a.addressKey === action.key,
+                );
+                draft.splice(index, 1);
             });
         }
         default: {

@@ -10,3 +10,10 @@ export const addAddress = (address) => {
         address,
     };
 };
+
+export const deleteAddress = (key) => {
+    return {
+        type: '@Address/DELETE_ADDRESS',
+        key,
+    };
+};
