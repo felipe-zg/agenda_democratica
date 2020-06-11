@@ -28,6 +28,35 @@ export const isCep = (cep) => {
     return cep.trim().length === 8;
 };
 
+export const isDate = (date) => {
+    var ardt = new Array();
+    var ExpReg = new RegExp(
+        '(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}',
+    );
+    ardt = date.split('/');
+    var erro = false;
+    if (date.search(ExpReg) == -1) {
+        erro = true;
+    } else if (
+        (ardt[1] == 4 || ardt[1] == 6 || ardt[1] == 9 || ardt[1] == 11) &&
+        ardt[0] > 30
+    ) {
+        erro = true;
+    } else if (ardt[1] == 2) {
+        if (ardt[0] > 28 && ardt[2] % 4 != 0) {
+            erro = true;
+        }
+        if (ardt[0] > 29 && ardt[2] % 4 == 0) {
+            erro = true;
+        }
+    }
+    return erro ? false : true;
+};
+
+export const HasMinChars = (value, minChars) => {
+    return value.trim().length >= minChars;
+};
+
 export const fieldsAreEqual = (firstField, secondField) => {
     return firstField === secondField;
 };
@@ -64,6 +93,18 @@ export const errors = {
     invalidCep: {
         border: '1px solid #f00',
         message: 'CEP inválido',
+    },
+    invalidDate: {
+        border: '1px solid #f00',
+        message: 'Data inválida',
+    },
+    invalidTitle: {
+        border: '1px solid #f00',
+        message: 'Mínimo de 8 caracteres',
+    },
+    invalidDescription: {
+        border: '1px solid #f00',
+        message: 'Mínimo de 100 caracteres',
     },
     valid: {
         border: 'none',

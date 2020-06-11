@@ -25,7 +25,7 @@ const Dashboard = ({navigation}) => {
                 iconName="user"
                 iconColor="#fff"
                 callBack={() => {
-                    console.warn('Meus eventos');
+                    navigation.navigate('CandidateEventsListScreen');
                 }}
             />
             <Button

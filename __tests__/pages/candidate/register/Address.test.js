@@ -1,7 +1,10 @@
 import React from 'react';
 import {fireEvent, render} from '@testing-library/react-native';
+import {useDispatch} from 'react-redux';
 import Address from '~/pages/candidate/register/Address';
+import {addAddress} from '~/store/modules/Address/actions';
 
+jest.mock('react-redux');
 const {getByTestId, getByText} = render(<Address />);
 
 describe('CEP input', () => {
@@ -103,4 +106,26 @@ describe('Register button ', () => {
         fireEvent.changeText(CEPInput, '28970000');
         expect(button).toBeEnabled();
     });
+});
+
+describe('dispatch new address', () => {
+    const streetInput = getByTestId('street-input');
+    const countyInput = getByTestId('county-input');
+    const numberInput = getByTestId('number-input');
+    const cityInput = getByTestId('city-input');
+    const CEPInput = getByTestId('CEP-input');
+    const button = getByTestId('register-button');
+
+    const dispatch = jest.fn();
+    useDispatch.mockReturnValue(dispatch);
+
+    fireEvent.changeText(streetInput, 'testStreet');
+    fireEvent.changeText(countyInput, 'testCounty');
+    fireEvent.changeText(numberInput, '123');
+    fireEvent.changeText(cityInput, 'testCity');
+    fireEvent.changeText(CEPInput, '28970000');
+    fireEvent.press(button);
+    // it('it should call dispatch with new address', () => {
+    //     expect(dispatch).toHaveBeenCalled();
+    // });
 });

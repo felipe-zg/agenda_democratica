@@ -22,8 +22,6 @@ const AddressesList = ({navigation}) => {
         dispatch(deleteAddress(key));
     }
 
-    function handleUpdateAddress(address) {}
-
     function renderAddress(address) {
         return (
             <Address>
@@ -37,15 +35,11 @@ const AddressesList = ({navigation}) => {
                         <Text> {address.city}</Text>
                     </Row>
                     <Text>{address.cep}</Text>
-                    <Text>{address.addressKey}</Text>
                 </View>
                 <View>
                     <IconTouch
                         onPress={() => handleDeleteAddress(address.addressKey)}>
                         <Icon name="trash-can-outline" size={30} color="#f00" />
-                    </IconTouch>
-                    <IconTouch onPress={() => handleUpdateAddress(address)}>
-                        <Icon name="lead-pencil" size={30} color="#00f" />
                     </IconTouch>
                 </View>
             </Address>

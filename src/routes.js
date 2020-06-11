@@ -2,8 +2,8 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import Load from './pages/Load';
 import SelectUser from './pages/SelectUser';
-
 import SignIn from './pages/SignIn';
 
 //Candidate register pages
@@ -15,15 +15,15 @@ import CandidateAddressRegister from './pages/candidate/register/Address';
 //Candidate dashboard
 import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
 import AddressesList from './pages/candidate/dashboard/AddressesList';
+import EventsList from './pages/candidate/dashboard/EventsList';
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
     return (
         <NavigationContainer>
-            <Stack.Navigator
-                initialRouteName="CandidateDashboardScreen"
-                headerMode="none">
+            <Stack.Navigator initialRouteName="LoadScreen" headerMode="none">
+                <Stack.Screen name="LoadScreen" component={Load} />
                 <Stack.Screen name="SelectUserScreen" component={SelectUser} />
                 <Stack.Screen name="SignInScreen" component={SignIn} />
                 <Stack.Screen
@@ -49,6 +49,10 @@ export default function Routes() {
                 <Stack.Screen
                     name="CandidateAddressesListScreen"
                     component={AddressesList}
+                />
+                <Stack.Screen
+                    name="CandidateEventsListScreen"
+                    component={EventsList}
                 />
             </Stack.Navigator>
         </NavigationContainer>
