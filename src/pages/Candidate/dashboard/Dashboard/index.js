@@ -61,7 +61,7 @@ const Dashboard = ({navigation}) => {
                 iconName="user"
                 iconColor="#fff"
                 callBack={() => {
-                    console.warn('Plano de governo');
+                    navigation.navigate('CandidateGovernmentPlanScreen');
                 }}
             />
             <Button

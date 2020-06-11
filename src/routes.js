@@ -16,6 +16,7 @@ import CandidateAddressRegister from './pages/candidate/register/Address';
 import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
 import AddressesList from './pages/candidate/dashboard/AddressesList';
 import EventsList from './pages/candidate/dashboard/EventsList';
+import GovernmentPlan from './pages/candidate/dashboard/GovernmentPlan';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,10 @@ export default function Routes() {
                 <Stack.Screen
                     name="CandidateEventsListScreen"
                     component={EventsList}
+                />
+                <Stack.Screen
+                    name="CandidateGovernmentPlanScreen"
+                    component={GovernmentPlan}
                 />
             </Stack.Navigator>
         </NavigationContainer>
