@@ -18,8 +18,8 @@ export const deleteAddress = (key) => {
     };
 };
 
-export const cleanAddressesList = () => {
+export const clearAddressesList = () => {
     return {
-        type: '@Address/CLEAN_ADDRESSES_LIST',
+        type: '@Address/CLEAR_ADDRESSES_LIST',
     };
 };

@@ -28,8 +28,8 @@ export default function Events(state = INITIAL_STATE, action) {
                 draft.splice(index, 1);
                 break;
             }
-            case '@Event/CLEAN_EVENTS_LIST': {
-                draft = INITIAL_STATE;
+            case '@Event/CLEAR_EVENTS_LIST': {
+                draft.splice(0, draft.length);
                 break;
             }
             default: {

@@ -8,8 +8,8 @@ import Toast from 'react-native-simple-toast';
 
 import loadAnimation from '../../../../assets/animations/load.json';
 
-import {cleanAddressesList} from '../../../../store/modules/Address/actions';
-import {cleanEventsList} from '../../../../store/modules/Event/actions';
+import {clearAddressesList} from '../../../../store/modules/Address/actions';
+import {clearEventsList} from '../../../../store/modules/Event/actions';
 
 import Container from '../../../../components/Container';
 import Button from '../../../../components/MenuButton';
@@ -25,10 +25,13 @@ const Dashboard = ({navigation}) => {
             auth()
                 .signOut()
                 .then(() => {
-                    dispatch(cleanAddressesList());
-                    dispatch(cleanEventsList());
+                    dispatch(clearAddressesList());
+                    dispatch(clearEventsList());
                     setIsloading(false);
-                    navigation.replace('LoadScreen');
+                    navigation.reset({
+                        index: 0,
+                        routes: [{name: 'LoadScreen'}],
+                    });
                 });
         } catch (e) {
             Toast.show('Erro ao tentar fazer logout');

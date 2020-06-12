@@ -25,8 +25,8 @@ export const deleteEvent = (key) => {
     };
 };
 
-export const cleanEventsList = () => {
+export const clearEventsList = () => {
     return {
-        type: '@Event/CLEAN_EVENTS_LIST',
+        type: '@Event/CLEAR_EVENTS_LIST',
     };
 };

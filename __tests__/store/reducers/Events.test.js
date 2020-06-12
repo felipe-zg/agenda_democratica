@@ -62,4 +62,9 @@ describe('Event reducer', () => {
         const state = reducer(eventList, Event.deleteEvent('jkajhs63h7ga32'));
         expect(state).toStrictEqual(newEventList);
     });
+
+    it('CLEAR_EVENTS_LIST', () => {
+        const state = reducer(eventList, Event.clearEventsList());
+        expect(state).toStrictEqual(INITIAL_STATE);
+    });
 });

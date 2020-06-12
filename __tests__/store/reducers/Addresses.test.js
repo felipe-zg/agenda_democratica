@@ -59,4 +59,9 @@ describe('Addresses reducer', () => {
         );
         expect(state).toStrictEqual(newAddressesList);
     });
+
+    it('CLEAR_ADDRESSES_LIST', () => {
+        const state = reducer(addressesList, Addresses.clearAddressesList());
+        expect(state).toStrictEqual(INITIAL_STATE);
+    });
 });

@@ -50,23 +50,21 @@ const SignIn = ({route, navigation}) => {
     }
 
     function handleSignIn() {
-        try {
-            setIsLoading(true);
-            auth()
-                .signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    cleanInputs();
-                    navigation.navigate('CandidateDashboardScreen');
-                    Toast.show('Login realizado com sucesso');
-                    setIsLoading(false);
-                })
-                .catch((e) => {
-                    Toast.show('E-mail ou senha incorretos');
+        setIsLoading(true);
+        auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(() => {
+                cleanInputs();
+                navigation.reset({
+                    index: 0,
+                    routes: [{name: 'LoadScreen'}],
                 });
-        } catch (e) {
-            Toast.show('Erro ao realizar login');
-            setIsLoading(false);
-        }
+                setIsLoading(false);
+            })
+            .catch((e) => {
+                setIsLoading(false);
+                Toast.show('E-mail ou senha incorretos');
+            });
     }
 
     if (isLoading) {
