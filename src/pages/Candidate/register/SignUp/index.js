@@ -3,6 +3,9 @@ import {View} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
 import {RadioButton} from 'react-native-paper';
+import Lottie from 'lottie-react-native';
+
+import loadAnimation from '../../../../assets/animations/load.json';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
@@ -36,6 +39,8 @@ const SignUp = ({navigation}) => {
     const [confirmPasswordError, setConfirmPasswordError] = useState(
         errors.valid,
     );
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const confirmEmailRef = useRef();
     const passwordRef = useRef();
@@ -75,10 +80,12 @@ const SignUp = ({navigation}) => {
 
     function handleSignUp() {
         try {
+            setIsLoading(true);
             auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(() => {
                     Toast.show('Cadastro realizado com sucesso');
+                    setIsLoading(false);
                     const nextPage =
                         office == 'prefeito'
                             ? 'MayorRegisterScreen'
@@ -90,10 +97,18 @@ const SignUp = ({navigation}) => {
                     Toast.show('Algo deu errado no cadastro :(');
                 });
         } catch (e) {
+            setIsLoading(false);
             Toast.show('Algo deu errado no cadastro :(');
         }
     }
 
+    if (isLoading) {
+        return (
+            <Container>
+                <Lottie source={loadAnimation} autoPlay loop />
+            </Container>
+        );
+    }
     return (
         <Container>
             <BackButton title="Login" action={() => navigation.goBack()} />

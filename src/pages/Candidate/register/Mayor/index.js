@@ -3,6 +3,10 @@ import ImagePicker from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
+import Toast from 'react-native-simple-toast';
+import Lottie from 'lottie-react-native';
+
+import loadAnimation from '../../../../assets/animations/load.json';
 
 import Container from '../../../../components/Container';
 import Input from '../../../../components/Input';
@@ -56,6 +60,7 @@ const Mayor = ({navigation}) => {
         '#ddd',
     );
     const [formIndex, setFormIndex] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
 
     //second for errors
     const [nameError, setNameError] = useState(errors.valid);
@@ -81,15 +86,23 @@ const Mayor = ({navigation}) => {
     }, [name, campaignName, viceName, party, number, id]);
 
     async function handleRegister() {
-        const user = auth().currentUser;
-        await persistPhoto(user.uid, photo.path);
-        const downloadUrl = await getPhotoDownloadUrl(user.uid);
-        await user.updateProfile({
-            displayName: name,
-            photoURL: downloadUrl,
-        });
-        database().ref('/candidates').push(getCandidate(user.uId));
-        navigation.replace('CandidateDashboardScreen');
+        try {
+            setIsLoading(true);
+            const user = auth().currentUser;
+            await persistPhoto(user.uid, photo.path);
+            const downloadUrl = await getPhotoDownloadUrl(user.uid);
+            await user.updateProfile({
+                displayName: name,
+                photoURL: downloadUrl,
+            });
+            await database().ref('/candidates').push(getCandidate(user.uId));
+            Toast.show('Bem-vindo(a) ao agenda democrática');
+            setIsLoading(false);
+            navigation.replace('CandidateDashboardScreen');
+        } catch (e) {
+            setIsLoading(false);
+            Toast.show('Algo deu errado');
+        }
     }
 
     function isFirstFormValid() {
@@ -357,17 +370,25 @@ const Mayor = ({navigation}) => {
         );
     }
 
-    if (formIndex == 2) {
-        return <Container>{secondForm()}</Container>;
-    } else {
+    if (isLoading) {
         return (
             <Container>
-                <Form>
-                    {formIndex === 1 && firstForm()}
-                    {formIndex === 3 && thirdForm()}
-                </Form>
+                <Lottie source={loadAnimation} autoPlay loop />
             </Container>
         );
+    } else {
+        if (formIndex == 2) {
+            return <Container>{secondForm()}</Container>;
+        } else {
+            return (
+                <Container>
+                    <Form>
+                        {formIndex === 1 && firstForm()}
+                        {formIndex === 3 && thirdForm()}
+                    </Form>
+                </Container>
+            );
+        }
     }
 };
 

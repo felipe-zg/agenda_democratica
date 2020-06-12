@@ -3,6 +3,9 @@ import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+import Lottie from 'lottie-react-native';
+
+import loadAnimation from '../../assets/animations/load.json';
 
 import {startAddresses} from '../../store/modules/Address/actions';
 import {startEvents} from '../../store/modules/Event/actions';
@@ -51,7 +54,7 @@ const Load = ({navigation}) => {
 
     return (
         <Container>
-            <Text>Carregando dados</Text>
+            <Lottie source={loadAnimation} autoPlay loop />
         </Container>
     );
 };

@@ -1,8 +1,9 @@
 import React from 'react';
 import {Alert} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
-import {useSelector, useDispatch} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 
 import {deleteEvent} from '../../../../store/modules/Event/actions';
 
@@ -34,11 +35,16 @@ const EventsList = ({navigation}) => {
     const dispatch = useDispatch();
 
     async function removeEventFromDatabase(key) {
-        await database()
-            .ref(`/events/${auth().currentUser.uid}`)
-            .child(key)
-            .remove();
-        dispatch(deleteEvent(key));
+        try {
+            await database()
+                .ref(`/events/${auth().currentUser.uid}`)
+                .child(key)
+                .remove();
+            dispatch(deleteEvent(key));
+            Toast.show('Evento excluído com sucesso');
+        } catch (e) {
+            Toast.show('Erro ao deletar evento');
+        }
     }
 
     function confirmDeleteAlert(title, key) {

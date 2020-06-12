@@ -1,13 +1,48 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useState} from 'react';
+import {View, ToastAndroid} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import auth from '@react-native-firebase/auth';
+import {useDispatch} from 'react-redux';
+import Lottie from 'lottie-react-native';
+import Toast from 'react-native-simple-toast';
+
+import loadAnimation from '../../../../assets/animations/load.json';
+
+import {cleanAddressesList} from '../../../../store/modules/Address/actions';
+import {cleanEventsList} from '../../../../store/modules/Event/actions';
 
 import Container from '../../../../components/Container';
 import Button from '../../../../components/MenuButton';
 // import { Container } from './styles';
 
 const Dashboard = ({navigation}) => {
+    const dispatch = useDispatch();
+    const [isLoading, setIsloading] = useState(false);
+
+    function handleSignOut() {
+        try {
+            setIsloading(true);
+            auth()
+                .signOut()
+                .then(() => {
+                    dispatch(cleanAddressesList());
+                    dispatch(cleanEventsList());
+                    setIsloading(false);
+                    navigation.replace('LoadScreen');
+                });
+        } catch (e) {
+            Toast.show('Erro ao tentar fazer logout');
+            setIsloading(false);
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <Container>
+                <Lottie source={loadAnimation} autoPlay loop />
+            </Container>
+        );
+    }
     return (
         <Container>
             <Button
@@ -69,11 +104,7 @@ const Dashboard = ({navigation}) => {
                 Icon={Icon}
                 iconName="user"
                 iconColor="#f00"
-                callBack={() => {
-                    auth()
-                        .signOut()
-                        .then(() => navigation.replace('SelectUserScreen'));
-                }}
+                callBack={() => handleSignOut()}
             />
         </Container>
     );

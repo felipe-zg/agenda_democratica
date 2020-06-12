@@ -22,6 +22,10 @@ export default function Addresses(state = INITIAL_STATE, action) {
                 draft.splice(index, 1);
                 break;
             }
+            case '@Address/CLEAN_ADDRESSES_LIST': {
+                draft = INITIAL_STATE;
+                break;
+            }
             default: {
                 return state;
             }

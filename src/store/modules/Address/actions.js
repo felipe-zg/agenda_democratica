@@ -17,3 +17,9 @@ export const deleteAddress = (key) => {
         key,
     };
 };
+
+export const cleanAddressesList = () => {
+    return {
+        type: '@Address/CLEAN_ADDRESSES_LIST',
+    };
+};

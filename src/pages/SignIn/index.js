@@ -2,6 +2,9 @@ import React, {useState, useRef, useEffect} from 'react';
 import {View, ToastAndroid} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
+import Lottie from 'lottie-react-native';
+
+import loadAnimation from '../../assets/animations/load.json';
 
 // import logo from '../../../assets/trump.png';
 import Container from '../../components/Container';
@@ -20,6 +23,7 @@ const SignIn = ({route, navigation}) => {
     const [passwordError, setPasswordError] = useState(errors.valid);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [buttonColor, setButtonColor] = useState('#0ff');
+    const [isLoading, setIsLoading] = useState(false);
     const passwordRef = useRef();
 
     useEffect(() => {
@@ -40,17 +44,38 @@ const SignIn = ({route, navigation}) => {
         signUpScreenToGo = signUpScreen;
     }
 
-    const handleSignIn = () => {
-        auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(() => {
-                Toast.show('login efetuado com sucesso');
-                navigation.navigate('CandidateDashboardScreen');
-            })
-            .catch((e) => {
-                Toast.show('E-mail ou senha incorretos');
-            });
-    };
+    function cleanInputs() {
+        setEmail('');
+        setPassword('');
+    }
+
+    function handleSignIn() {
+        try {
+            setIsLoading(true);
+            auth()
+                .signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    cleanInputs();
+                    navigation.navigate('CandidateDashboardScreen');
+                    Toast.show('Login realizado com sucesso');
+                    setIsLoading(false);
+                })
+                .catch((e) => {
+                    Toast.show('E-mail ou senha incorretos');
+                });
+        } catch (e) {
+            Toast.show('Erro ao realizar login');
+            setIsLoading(false);
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <Container>
+                <Lottie source={loadAnimation} autoPlay loop />
+            </Container>
+        );
+    }
 
     return (
         <Container>

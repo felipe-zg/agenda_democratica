@@ -5,8 +5,12 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Picker} from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-simple-toast';
+import Lottie from 'lottie-react-native';
 
 import {addEvent, updateEvent} from '../../../../store/modules/Event/actions';
+
+import loadAnimation from '../../../../assets/animations/load.json';
 
 import {categories} from '../../../../utils/enums';
 import {isDate, HasMinChars, errors} from '../../../../utils/validations';
@@ -48,6 +52,7 @@ const Event = ({route, navigation}) => {
     const [description, setDescription] = useState(
         event ? event.description : '',
     );
+    const [isLoading, setIsLoading] = useState(false);
 
     const [titleError, setTitleError] = useState(errors.valid);
     const [dateError, setDateError] = useState(errors.valid);
@@ -99,22 +104,46 @@ const Event = ({route, navigation}) => {
     }
 
     async function handleRegister() {
-        const uId = auth().currentUser.uid;
-        const ref = database().ref(`/events/${uId}`);
-        const key = ref.push().key;
-        const event = getEvent(key);
-        await ref.child(key).set(event);
-        dispatch(addEvent(event));
-        navigation.replace('CandidateEventsListScreen');
+        try {
+            setIsLoading(true);
+            const uId = auth().currentUser.uid;
+            const ref = database().ref(`/events/${uId}`);
+            const key = ref.push().key;
+            const event = getEvent(key);
+            await ref.child(key).set(event);
+            dispatch(addEvent(event));
+            Toast.show('Evento cadastrado com sucesso');
+            setIsLoading(false);
+            navigation.replace('CandidateEventsListScreen');
+        } catch (e) {
+            setIsLoading(false);
+            Toast.show('Erro ao cadastrar evento');
+        }
     }
 
     async function handleUpdate() {
-        const updatedEvent = getEvent(event.eventKey);
-        await database()
-            .ref(`/events/${auth().currentUser.uid}/${event.eventKey}`)
-            .set(updatedEvent);
-        dispatch(updateEvent(updatedEvent));
-        navigation.goBack();
+        try {
+            setIsLoading(true);
+            const updatedEvent = getEvent(event.eventKey);
+            await database()
+                .ref(`/events/${auth().currentUser.uid}/${event.eventKey}`)
+                .set(updatedEvent);
+            dispatch(updateEvent(updatedEvent));
+            Toast.show('Evento atualizado com sucesso');
+            setIsLoading(false);
+            navigation.goBack();
+        } catch (e) {
+            setIsLoading(false);
+            Toast.show('Erro ao atualizar evento');
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <Container>
+                <Lottie source={loadAnimation} autoPlay loop />
+            </Container>
+        );
     }
 
     return (

@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-simple-toast';
 
 import BackButton from '../../../../components/BackButton';
 import Container from '../../../../components/Container';
@@ -16,10 +17,15 @@ const AddressesList = ({navigation}) => {
     const addresses = useSelector((state) => state.Addresses);
     const dispatch = useDispatch();
 
-    function handleDeleteAddress(key) {
-        const user = auth().currentUser;
-        database().ref(`/addresses/${user.uid}/`).child(key).remove();
-        dispatch(deleteAddress(key));
+    async function handleDeleteAddress(key) {
+        try {
+            const user = auth().currentUser;
+            await database().ref(`/addresses/${user.uid}/`).child(key).remove();
+            dispatch(deleteAddress(key));
+            Toast.show('Endereço excluído com sucesso');
+        } catch (e) {
+            Toast.show('Erro ao excluir endereço');
+        }
     }
 
     function renderAddress(address) {

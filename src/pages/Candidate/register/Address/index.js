@@ -2,6 +2,10 @@ import React, {useState, useEffect, isValidElement} from 'react';
 import {useDispatch} from 'react-redux';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-simple-toast';
+import Lottie from 'lottie-react-native';
+
+import loadAnimation from '../../../../assets/animations/load.json';
 
 import {addAddress} from '../../../../store/modules/Address/actions';
 
@@ -24,6 +28,7 @@ const Address = ({navigation}) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [buttonBackground, setButtonBackground] = useState('#ddd');
     const [cepError, setCepError] = useState(errors.valid);
+    const [isLoading, setIsLoading] = useState(false);
 
     const dispacth = useDispatch();
 
@@ -64,13 +69,29 @@ const Address = ({navigation}) => {
     }
 
     async function handleRegister() {
-        const user = auth().currentUser;
-        const ref = database().ref(`/addresses/${user.uid}`);
-        const addressKey = ref.push().key;
-        const address = getAddress(addressKey);
-        ref.child(addressKey).set(address);
-        dispacth(addAddress(address));
-        navigation.replace('CandidateAddressesListScreen');
+        try {
+            setIsLoading(true);
+            const user = auth().currentUser;
+            const ref = database().ref(`/addresses/${user.uid}`);
+            const addressKey = ref.push().key;
+            const address = getAddress(addressKey);
+            await ref.child(addressKey).set(address);
+            dispacth(addAddress(address));
+            Toast.show('Endereço cadastrado com sucesso');
+            setIsLoading(false);
+            navigation.replace('CandidateAddressesListScreen');
+        } catch (e) {
+            setIsLoading(false);
+            Toast.show('Erro ao cadastrar endereço');
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <Container>
+                <Lottie source={loadAnimation} autoPlay loop />
+            </Container>
+        );
     }
 
     return (
