@@ -44,7 +44,8 @@ const renderAddresses = (addresses) => {
 };
 
 const Event = ({route, navigation}) => {
-    const event = route.params ? route.params.event : null;
+    // const event = route.params ? route.params.event : null;
+    const event = null;
     const [title, setTitle] = useState(event ? event.title : '');
     const [date, setDate] = useState(event ? event.date : '');
     const [category, setCategory] = useState(event ? event.category : '');

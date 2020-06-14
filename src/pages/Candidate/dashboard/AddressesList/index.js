@@ -30,7 +30,7 @@ const AddressesList = ({navigation}) => {
 
     function renderAddress(address) {
         return (
-            <Address>
+            <Address testID="address">
                 <View>
                     <Row>
                         <Text>{address.street}, </Text>
@@ -44,6 +44,7 @@ const AddressesList = ({navigation}) => {
                 </View>
                 <View>
                     <IconTouch
+                        testID="delete-button"
                         onPress={() => handleDeleteAddress(address.addressKey)}>
                         <Icon name="trash-can-outline" size={30} color="#f00" />
                     </IconTouch>
@@ -56,6 +57,7 @@ const AddressesList = ({navigation}) => {
         <Container>
             <BackButton action={() => navigation.goBack()} />
             <Addresses
+                testID="addresses-list"
                 data={addresses}
                 renderItem={({item}) => renderAddress(item)}
                 keyExtractor={(item) => item.addressKey}

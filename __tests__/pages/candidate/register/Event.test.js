@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {fireEvent, render} from '@testing-library/react-native';
 import Event from '~/pages/candidate/register/Event';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 jest.mock('react-redux');
 
@@ -189,5 +189,17 @@ describe('Register button', () => {
             'test test test test test test test test test test test test test test test test test test test test test ',
         );
         expect(button).toBeEnabled();
+    });
+});
+
+describe('Add event', () => {
+    it('should call dispatch with the event', () => {
+        const dispatch = jest.fn();
+        useDispatch.mockReturnValue(dispatch);
+
+        // fireEvent.press(button);
+
+        // console.log(dispatch.mock.calls);
+        // expect(dispatch).toHaveBeenCalledTimes(1);
     });
 });

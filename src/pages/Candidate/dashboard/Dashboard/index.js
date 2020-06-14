@@ -13,6 +13,7 @@ import {clearEventsList} from '../../../../store/modules/Event/actions';
 
 import Container from '../../../../components/Container';
 import Button from '../../../../components/MenuButton';
+import BackButton from '../../../../components/BackButton';
 // import { Container } from './styles';
 
 const Dashboard = ({navigation}) => {
@@ -48,6 +49,7 @@ const Dashboard = ({navigation}) => {
     }
     return (
         <Container>
+            <BackButton action={() => navigation.goBack()} title="Posts" />
             <Button
                 title="Novo evento"
                 Icon={Icon}

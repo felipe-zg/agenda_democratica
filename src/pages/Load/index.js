@@ -9,6 +9,7 @@ import loadAnimation from '../../assets/animations/load.json';
 
 import {startAddresses} from '../../store/modules/Address/actions';
 import {startEvents} from '../../store/modules/Event/actions';
+import {startPosts} from '../../store/modules/Posts/actions';
 
 import Container from '../../components/Container';
 import Text from '../../components/Text';
@@ -23,6 +24,7 @@ const Load = ({navigation}) => {
             if (user) {
                 let addresses = [];
                 let events = [];
+                let posts = [];
                 await database()
                     .ref(`addresses/${user.uid}`)
                     .orderByKey()
@@ -43,9 +45,20 @@ const Load = ({navigation}) => {
                             });
                         }
                     });
+                await database()
+                    .ref(`posts/${user.uid}`)
+                    .orderByKey()
+                    .once('value', (snapShot) => {
+                        if (snapShot.val()) {
+                            snapShot.forEach((childSnapshot) => {
+                                posts = [...posts, childSnapshot.val()];
+                            });
+                        }
+                    });
                 dispatch(startAddresses(addresses));
                 dispatch(startEvents(events));
-                screen = 'CandidateDashboardScreen';
+                dispatch(startPosts(posts));
+                screen = 'CandidatePostsScreen';
             }
             navigation.replace(screen);
         }
