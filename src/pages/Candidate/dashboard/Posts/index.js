@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
@@ -25,6 +25,7 @@ import {
     Touch,
     PostOptions,
     PostsList,
+    PostPhoto,
 } from './styles';
 
 const renderpost = (post) => {
@@ -48,10 +49,11 @@ const Posts = ({navigation}) => {
 
     function togglePost() {
         setIsPosting(!isPosting);
-        setInputWidth(inputWidth === '70%' ? '95%' : '70%');
+        setInputWidth(inputWidth === '70%' ? '100%' : '70%');
         setInputHeight(inputHeight === 'undefined' ? '250px' : 'undefined');
-        setInputBorderRadius(inputBorderRadius === '35px' ? '20px' : '35px');
+        setInputBorderRadius(inputBorderRadius === '35px' ? '0' : '35px');
         setInputNumberOfLines(inputNumberOfLines === 1 ? 15 : 1);
+        setPhoto(null);
     }
 
     function handleImagePicker() {
@@ -145,9 +147,21 @@ const Posts = ({navigation}) => {
                 </PostOptions>
             )}
             <Header>
+                {photo && (
+                    <TouchableOpacity onPress={handleImagePicker}>
+                        <PostPhoto source={{uri: photo.uri}} />
+                    </TouchableOpacity>
+                )}
                 <Row>
                     {!isPosting && (
-                        <Photo source={{uri: auth().currentUser.photoURL}} />
+                        <TouchableOpacity
+                            onPress={() =>
+                                navigation.navigate('CandidateProfileScreen')
+                            }>
+                            <Photo
+                                source={{uri: auth().currentUser.photoURL}}
+                            />
+                        </TouchableOpacity>
                     )}
                     <PostInput
                         placeholder="Novo post"
@@ -173,14 +187,24 @@ const Posts = ({navigation}) => {
                     )}
                 </Row>
                 {isPosting && (
-                    <Row align="space-between">
-                        <Touch onPress={handleImagePicker}>
-                            <Icon name="camera" color="#ddd" size={40} />
-                        </Touch>
-                        <Text padding="0 10px 0 0">
-                            {280 - post.length} caracteres
-                        </Text>
-                    </Row>
+                    <>
+                        <Row align="space-between">
+                            {!photo && (
+                                <Touch onPress={handleImagePicker}>
+                                    <Icon
+                                        name="camera"
+                                        color="#ddd"
+                                        size={40}
+                                    />
+                                </Touch>
+                            )}
+                            <Text
+                                padding={photo ? '5px 0 0 10px' : '0 10px 0 0'}
+                                size={photo ? '8px' : undefined}>
+                                {280 - post.length} caracteres
+                            </Text>
+                        </Row>
+                    </>
                 )}
             </Header>
             {!isPosting && (

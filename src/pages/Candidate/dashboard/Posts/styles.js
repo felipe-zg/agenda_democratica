@@ -46,3 +46,7 @@ export const PostOptions = styled.View`
 `;
 
 export const PostsList = styled.FlatList``;
+
+export const PostPhoto = styled.Image`
+    height: 320px;
+`;

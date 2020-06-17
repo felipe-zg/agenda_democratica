@@ -34,10 +34,6 @@ const Post = ({post, user}) => {
                     text: 'Deletar post',
                     onPress: () => confirmDeleteAlert(),
                 },
-                {
-                    text: 'Atualizar post',
-                    onPress: () => console.warn('atualizando post'),
-                },
             ],
             {cancelable: false},
         );

@@ -17,6 +17,7 @@ import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
 import AddressesList from './pages/candidate/dashboard/AddressesList';
 import EventsList from './pages/candidate/dashboard/EventsList';
 import GovernmentPlan from './pages/candidate/dashboard/GovernmentPlan';
+import Profile from './pages/candidate/dashboard/Profile';
 import Posts from './pages/candidate/dashboard/Posts';
 
 const Stack = createStackNavigator();
@@ -59,6 +60,10 @@ export default function Routes() {
                 <Stack.Screen
                     name="CandidateGovernmentPlanScreen"
                     component={GovernmentPlan}
+                />
+                <Stack.Screen
+                    name="CandidateProfileScreen"
+                    component={Profile}
                 />
                 <Stack.Screen name="CandidatePostsScreen" component={Posts} />
             </Stack.Navigator>
