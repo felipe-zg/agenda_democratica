@@ -109,7 +109,7 @@ const EventsList = ({navigation}) => {
     }
     return (
         <Container>
-            <BackButton action={() => navigation.goBack()} />
+            <BackButton action={() => navigation.goBack()} title="dashboard" />
             <Events
                 data={events}
                 renderItem={({item}) => renderEvent(item)}

@@ -2,8 +2,6 @@ import styled from 'styled-components/native';
 
 export const Touch = styled.TouchableOpacity`
     background: #363636;
-    border-bottom-width: 0.4px;
-    border-bottom-color: #fff;
     padding: 5px
     flex-direction: row;
     justify-content: space-between;

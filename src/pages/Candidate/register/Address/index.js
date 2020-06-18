@@ -96,7 +96,7 @@ const Address = ({navigation}) => {
 
     return (
         <Container>
-            <BackButton action={() => navigation.goBack()} />
+            <BackButton action={() => navigation.goBack()} title="dashboard" />
             <Form>
                 <Text>Rua</Text>
                 <Input

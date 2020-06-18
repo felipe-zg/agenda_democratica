@@ -14,7 +14,7 @@ import {clearEventsList} from '../../../../store/modules/Event/actions';
 import Container from '../../../../components/Container';
 import Button from '../../../../components/MenuButton';
 import BackButton from '../../../../components/BackButton';
-// import { Container } from './styles';
+import {MenuBlock} from './styles';
 
 const Dashboard = ({navigation}) => {
     const dispatch = useDispatch();
@@ -49,68 +49,76 @@ const Dashboard = ({navigation}) => {
     }
     return (
         <Container>
-            <BackButton action={() => navigation.goBack()} title="Posts" />
-            <Button
-                title="Novo evento"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#fff"
-                callBack={() => {
-                    navigation.navigate('CandidateEventRegisterScreen');
-                }}
-            />
-            <Button
-                title="Meus eventos"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#fff"
-                callBack={() => {
-                    navigation.navigate('CandidateEventsListScreen');
-                }}
-            />
-            <Button
-                title="Novo endereço"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#fff"
-                callBack={() => {
-                    navigation.navigate('CandidateAddressRegisterScreen');
-                }}
-            />
-            <Button
-                title="Meus endereços"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#fff"
-                callBack={() => {
-                    navigation.navigate('CandidateAddressesListScreen');
-                }}
-            />
-            <Button
-                title="Meu Perfil"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#fff"
-                callBack={() => {
-                    console.warn('Meu perfil');
-                }}
-            />
-            <Button
-                title="Plano de governo"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#fff"
-                callBack={() => {
-                    navigation.navigate('CandidateGovernmentPlanScreen');
-                }}
-            />
-            <Button
-                title="Sair"
-                Icon={Icon}
-                iconName="user"
-                iconColor="#f00"
-                callBack={() => handleSignOut()}
-            />
+            <BackButton action={() => navigation.goBack()} title="voltar" />
+            <MenuBlock>
+                <Button
+                    title="Meus eventos"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateEventsListScreen');
+                    }}
+                />
+                <Button
+                    title="Meus endereços"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateAddressesListScreen');
+                    }}
+                />
+                <Button
+                    title="Meu Perfil"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateProfileScreen');
+                    }}
+                />
+            </MenuBlock>
+            <MenuBlock>
+                <Button
+                    title="Novo evento"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateEventRegisterScreen');
+                    }}
+                />
+                <Button
+                    title="Novo endereço"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateAddressRegisterScreen');
+                    }}
+                />
+            </MenuBlock>
+            <MenuBlock>
+                <Button
+                    title="Plano de governo"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#fff"
+                    callBack={() => {
+                        navigation.navigate('CandidateGovernmentPlanScreen');
+                    }}
+                />
+            </MenuBlock>
+            <MenuBlock>
+                <Button
+                    title="Sair"
+                    Icon={Icon}
+                    iconName="user"
+                    iconColor="#f00"
+                    callBack={() => handleSignOut()}
+                />
+            </MenuBlock>
         </Container>
     );
 };

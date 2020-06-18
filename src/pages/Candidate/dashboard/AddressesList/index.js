@@ -55,7 +55,7 @@ const AddressesList = ({navigation}) => {
 
     return (
         <Container>
-            <BackButton action={() => navigation.goBack()} />
+            <BackButton action={() => navigation.goBack()} title="dashboard" />
             <Addresses
                 testID="addresses-list"
                 data={addresses}

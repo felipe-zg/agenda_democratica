@@ -68,7 +68,7 @@ const Profile = ({navigation}) => {
     }
     return (
         <Container>
-            <BackButton action={() => navigation.goBack()} title="Posts" />
+            <BackButton action={() => navigation.goBack()} title="voltar" />
             <ScrollView>
                 <Header>
                     <TouchableOpacity onPress={() => handleImagePicker()}>

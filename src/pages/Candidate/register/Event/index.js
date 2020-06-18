@@ -22,6 +22,7 @@ import Input from '../../../../components/Input';
 import MaskedInput from '../../../../components/MaskedInput';
 import Button from '../../../../components/Button';
 import Text from '../../../../components/Text';
+import BackButton from '../../../../components/BackButton';
 
 import {PickerView, MultilineInput} from './styles';
 
@@ -149,6 +150,7 @@ const Event = ({route, navigation}) => {
 
     return (
         <Container>
+            <BackButton action={() => navigation.goBack()} title="dashboard" />
             <Form>
                 {titleError === errors.valid && <Text>Título</Text>}
                 {titleError === errors.invalidTitle && (

@@ -9,12 +9,11 @@ import Container from '../../../../components/Container';
 import Text from '../../../../components/Text';
 import BackButton from '../../../../components/BackButton';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-// import { Container } from './styles';
+// import {  } from './styles';
 
-async function persistPhoto(uId, filePath) {
-    const storageRef = storage().ref('files/governmentPlan');
-    const endPath = storageRef.child(uId + '/gp.pdf');
-    await endPath.putFile(filePath);
+async function persistFile(uId, file) {
+    const storageRef = storage().ref(`files/${uId}/governmentPlan.pdf`);
+    await storageRef.putFile(file);
 }
 
 async function getPhotoDownloadUrl(uId) {
@@ -33,8 +32,9 @@ const GovernmentPlan = ({navigation}) => {
             const res = await DocumentPicker.pick({
                 type: [DocumentPicker.types.pdf],
             });
-
-            console.warn('Uploading file');
+            persistFile(res.path)
+                .then(() => console.warn('file uploaded'))
+                .catch((e) => console.warn('error'));
 
             navigation.goBack();
         } catch (err) {
