@@ -1,8 +1,9 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, ToastAndroid} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
 import Lottie from 'lottie-react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import loadAnimation from '../../assets/animations/load.json';
 
@@ -11,7 +12,8 @@ import Container from '../../components/Container';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Text from '../../components/Text';
-import {LogoView, FormView, Logo, SignUpLink} from './styles';
+import PasswordView from '../../components/PasswordView';
+import {LogoView, Logo, FormView, SignUpLink} from './styles';
 
 import {isEmail, isPassword, errors} from '../../utils/validations';
 import {handleInputChange} from '../../utils/handlers';
@@ -24,6 +26,8 @@ const SignIn = ({route, navigation}) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [buttonColor, setButtonColor] = useState('#0ff');
     const [isLoading, setIsLoading] = useState(false);
+    const [iconName, setIconName] = useState('eye-outline');
+    const [isSecure, setIsSecure] = useState(true);
     const passwordRef = useRef();
 
     useEffect(() => {
@@ -65,6 +69,13 @@ const SignIn = ({route, navigation}) => {
                 setIsLoading(false);
                 Toast.show('E-mail ou senha incorretos');
             });
+    }
+
+    function togglePassword() {
+        setIconName(
+            iconName === 'eye-outline' ? 'eye-off-outline' : 'eye-outline',
+        );
+        setIsSecure(!isSecure);
     }
 
     if (isLoading) {
@@ -116,27 +127,34 @@ const SignIn = ({route, navigation}) => {
                     testID="password-input-error-message">
                     {passwordError.message}
                 </Text>
-                <Input
-                    testID="password-input"
-                    ref={passwordRef}
-                    placeholder="Digite sua senha"
-                    border={passwordError.border}
-                    value={password}
-                    onChangeText={(password) =>
-                        handleInputChange(
-                            password,
-                            setPassword,
-                            isPassword,
-                            passwordError,
-                            setPasswordError,
-                            errors.invalidPassword,
-                        )
-                    }
-                    secureTextEntry
-                    autoCapitalize="none"
-                    returnKeyType="send"
-                    onSubmitEditing={() => handleSignIn()}
-                />
+                <PasswordView border={passwordError.border}>
+                    <Input
+                        testID="password-input"
+                        ref={passwordRef}
+                        width="90%"
+                        marginBottom="0"
+                        secureTextEntry={isSecure}
+                        placeholder="Digite sua senha"
+                        border="none"
+                        value={password}
+                        onChangeText={(password) =>
+                            handleInputChange(
+                                password,
+                                setPassword,
+                                isPassword,
+                                passwordError,
+                                setPasswordError,
+                                errors.invalidPassword,
+                            )
+                        }
+                        autoCapitalize="none"
+                        returnKeyType="send"
+                        onSubmitEditing={() => handleSignIn()}
+                    />
+                    <TouchableOpacity onPress={() => togglePassword()}>
+                        <Icon name={iconName} color="#fff" size={30} />
+                    </TouchableOpacity>
+                </PasswordView>
                 <Button
                     testID="signIn-button"
                     title="Entrar"

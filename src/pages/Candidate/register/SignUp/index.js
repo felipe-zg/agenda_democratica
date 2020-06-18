@@ -1,9 +1,10 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
 import {RadioButton} from 'react-native-paper';
 import Lottie from 'lottie-react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import loadAnimation from '../../../../assets/animations/load.json';
 
@@ -12,6 +13,7 @@ import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
 import BackButton from '../../../../components/BackButton';
 import Text from '../../../../components/Text';
+import PasswordView from '../../../../components/PasswordView';
 import {Form, RadioButtonView} from './styles';
 
 import {
@@ -41,6 +43,8 @@ const SignUp = ({navigation}) => {
     );
 
     const [isLoading, setIsLoading] = useState(false);
+    const [iconName, setIconName] = useState('eye-outline');
+    const [isSecure, setIsSecure] = useState(true);
 
     const confirmEmailRef = useRef();
     const passwordRef = useRef();
@@ -100,6 +104,13 @@ const SignUp = ({navigation}) => {
             setIsLoading(false);
             Toast.show('Algo deu errado no cadastro :(');
         }
+    }
+
+    function togglePassword() {
+        setIconName(
+            iconName === 'eye-outline' ? 'eye-off-outline' : 'eye-outline',
+        );
+        setIsSecure(!isSecure);
     }
 
     if (isLoading) {
@@ -177,27 +188,36 @@ const SignUp = ({navigation}) => {
                     size="8px">
                     {passwordError.message}
                 </Text>
-                <Input
-                    testID="password-input"
-                    ref={passwordRef}
-                    placeholder="Digite sua senha"
-                    border={passwordError.border}
-                    value={password}
-                    onChangeText={(password) => {
-                        handleInputChange(
-                            password,
-                            setPassword,
-                            isPassword,
-                            passwordError,
-                            setPasswordError,
-                            errors.invalidPassword,
-                        );
-                    }}
-                    secureTextEntry
-                    autoCapitalize="none"
-                    returnKeyType="send"
-                    onSubmitEditing={() => confirmPasswordRef.current.focus()}
-                />
+                <PasswordView border={passwordError.border}>
+                    <Input
+                        testID="password-input"
+                        ref={passwordRef}
+                        width="90%"
+                        marginBottom="0"
+                        secureTextEntry={isSecure}
+                        placeholder="Digite sua senha"
+                        border="none"
+                        value={password}
+                        onChangeText={(password) => {
+                            handleInputChange(
+                                password,
+                                setPassword,
+                                isPassword,
+                                passwordError,
+                                setPasswordError,
+                                errors.invalidPassword,
+                            );
+                        }}
+                        autoCapitalize="none"
+                        returnKeyType="send"
+                        onSubmitEditing={() =>
+                            confirmPasswordRef.current.focus()
+                        }
+                    />
+                    <TouchableOpacity onPress={() => togglePassword()}>
+                        <Icon name={iconName} color="#fff" size={30} />
+                    </TouchableOpacity>
+                </PasswordView>
                 <Text>Confirme sua senha</Text>
                 <Text
                     testID="confirmPassword-input-error-message"
@@ -221,7 +241,7 @@ const SignUp = ({navigation}) => {
                             errors.invalidPassword,
                         );
                     }}
-                    secureTextEntry
+                    secureTextEntry={isSecure}
                     autoCapitalize="none"
                     returnKeyType="send"
                     onSubmitEditing={() => handleSubmit()}
