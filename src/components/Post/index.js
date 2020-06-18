@@ -74,8 +74,8 @@ const Post = ({post, user}) => {
         <Container>
             <PostHeader>
                 <Profile>
-                    <ProfilePhoto source={{uri: user.photoURL}} />
-                    <Text padding="0 0 0 15px">{user.displayName}</Text>
+                    <ProfilePhoto source={{uri: user.photo}} />
+                    <Text padding="0 0 0 15px">{user.name}</Text>
                 </Profile>
                 <Touch onPress={handlePostOptions}>
                     <Icon name="keyboard-arrow-down" color="#fff" size={25} />

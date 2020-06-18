@@ -13,9 +13,9 @@ export const EditInput = styled.TextInput`
     width: 85%;
     color: #fff;
     padding: 0 10px 5px 10px;
-    border-bottom-color: #00f;
     border-style: solid;
-    border-bottom-width: ${(props) => props.border};
+    border-bottom-color: ${(props) => props.color};
+    border-bottom-width: ${(props) => props.width};
 `;
 
 export const Touch = styled.TouchableOpacity`

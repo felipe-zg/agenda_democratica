@@ -121,13 +121,13 @@ const Mayor = ({navigation}) => {
 
     function getCandidate(uId, key) {
         return {
-            name,
-            campaignName,
-            viceName,
-            party,
-            number,
-            id,
-            about,
+            name: name.trim(),
+            campaignName: campaignName.trim(),
+            viceName: viceName.trim(),
+            party: party.trim(),
+            number: number.trim(),
+            id: id.trim(),
+            about: about.trim(),
             uId,
             candidateKey: key,
         };
@@ -169,7 +169,7 @@ const Mayor = ({navigation}) => {
                     testID="name-input"
                     placeholder="Nome completo do candidato"
                     border={nameError.border}
-                    value={name}
+                    value={name.replace(/( )+/g, ' ')}
                     onChangeText={(name) => {
                         handleInputChange(
                             name,
@@ -196,7 +196,7 @@ const Mayor = ({navigation}) => {
                     testID="campaignName-input"
                     placeholder="Nome de campanha do candidato"
                     border={campaignNameError.border}
-                    value={campaignName}
+                    value={campaignName.replace(/( )+/g, ' ')}
                     onChangeText={(campaignName) => {
                         handleInputChange(
                             campaignName,
@@ -221,7 +221,7 @@ const Mayor = ({navigation}) => {
                     testID="viceName-input"
                     placeholder="Nome do vice"
                     border={viceNameError.border}
-                    value={viceName}
+                    value={viceName.replace(/( )+/g, ' ')}
                     onChangeText={(viceName) => {
                         handleInputChange(
                             viceName,
@@ -246,7 +246,7 @@ const Mayor = ({navigation}) => {
                     testID="party-input"
                     placeholder="Partido do candidato"
                     border={partyError.border}
-                    value={party}
+                    value={party.replace(/\s/g, '')}
                     onChangeText={(party) => {
                         handleInputChange(
                             party,
@@ -274,7 +274,7 @@ const Mayor = ({navigation}) => {
                     placeholder="Número do candidato"
                     border={numberError.border}
                     maxLength={2}
-                    value={number}
+                    value={number.replace(/\s/g, '')}
                     onChangeText={(number) => {
                         handleInputChange(
                             number,
@@ -299,7 +299,7 @@ const Mayor = ({navigation}) => {
                     testID="registerNumber-input"
                     placeholder="Nº registro da candidatura (TSE)"
                     border={idError.border}
-                    value={id}
+                    value={id.replace(/\s/g, '')}
                     onChangeText={(id) => {
                         handleInputChange(
                             id,
@@ -360,7 +360,7 @@ const Mayor = ({navigation}) => {
                     numberOfLines={20}
                     maxLength={600}
                     placeholder="Sobre o candidato"
-                    value={about}
+                    value={about.replace(/( )+/g, ' ')}
                     onChangeText={setAbout}
                     returnKeyType="send"
                     onSubmitEditing={() => handleRegister}

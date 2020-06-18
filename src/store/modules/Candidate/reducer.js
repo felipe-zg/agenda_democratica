@@ -29,6 +29,10 @@ export default function Posts(state = INITIAL_STATE, action) {
                         draft.about = action.value;
                         break;
                     }
+                    case 'photo': {
+                        draft.photo = action.value;
+                        break;
+                    }
                     default: {
                         return draft;
                     }

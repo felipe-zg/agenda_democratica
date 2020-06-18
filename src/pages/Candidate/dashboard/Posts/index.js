@@ -44,6 +44,7 @@ const Posts = ({navigation}) => {
 
     const postRef = useRef();
 
+    const candidate = useSelector((state) => state.Candidate);
     const posts = useSelector((state) => state.Posts);
     const dispatch = useDispatch();
 
@@ -158,9 +159,7 @@ const Posts = ({navigation}) => {
                             onPress={() =>
                                 navigation.navigate('CandidateProfileScreen')
                             }>
-                            <Photo
-                                source={{uri: auth().currentUser.photoURL}}
-                            />
+                            <Photo source={{uri: candidate.photo}} />
                         </TouchableOpacity>
                     )}
                     <PostInput
@@ -211,7 +210,7 @@ const Posts = ({navigation}) => {
                 <PostsList
                     data={posts}
                     renderItem={({item}) => (
-                        <Post post={item} user={auth().currentUser} />
+                        <Post post={item} user={candidate} />
                     )}
                     keyExtractor={(item) => item.postKey}
                 />
