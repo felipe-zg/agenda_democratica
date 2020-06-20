@@ -95,13 +95,13 @@ const Mayor = ({navigation}) => {
                 displayName: name,
                 photoURL: downloadUrl,
             });
-            const ref = database().ref('/candidates');
-            const key = await ref.push().key;
-            const candidate = getCandidate(user.uid, key);
+            const ref = database().ref('/candidates/mayor');
+            const key = ref.push().key;
+            const candidate = getCandidate(user.uid, key, downloadUrl);
             ref.child(key).set(candidate);
             Toast.show('Bem-vindo(a) ao agenda democrática');
             setIsLoading(false);
-            navigation.replace('CandidateDashboardScreen');
+            navigation.replace('CandidatePostsScreen');
         } catch (e) {
             setIsLoading(false);
             Toast.show('Algo deu errado');
@@ -119,7 +119,7 @@ const Mayor = ({navigation}) => {
         );
     }
 
-    function getCandidate(uId, key) {
+    function getCandidate(uId, key, photo) {
         return {
             name: name.trim(),
             campaignName: campaignName.trim(),
@@ -130,6 +130,7 @@ const Mayor = ({navigation}) => {
             about: about.trim(),
             uId,
             candidateKey: key,
+            photo,
         };
     }
 

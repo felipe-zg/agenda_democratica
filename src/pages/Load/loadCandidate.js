@@ -1,47 +1,24 @@
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
+
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import Lottie from 'lottie-react-native';
 
 import loadAnimation from '../../assets/animations/load.json';
+import Container from '../../components/Container';
 
 import {startAddresses} from '../../store/modules/Address/actions';
 import {startEvents} from '../../store/modules/Event/actions';
 import {startPosts} from '../../store/modules/Posts/actions';
 import {startCandidate} from '../../store/modules/Candidate/actions';
 
-import Container from '../../components/Container';
-import Text from '../../components/Text';
-// import { Container } from './styles';
-
-const Load = ({navigation}) => {
+const LoadCandidate = ({route, navigation}) => {
     const dispatch = useDispatch();
-
+    const {userType} = route.params;
     useEffect(() => {
         async function start() {
             const user = auth().currentUser;
-            var screen = 'SelectUserScreen';
-            if (user) {
-                screen = await verifyUserType(user);
-            }
-            navigation.replace(screen);
-        }
-        start();
-    });
-
-    async function verifyUserType(user) {
-        var userType;
-        await database()
-            .ref('/users/')
-            .child(user.uid)
-            .once('value')
-            .then(function (snapshot) {
-                userType = snapshot.val();
-            });
-        if (userType === 'mayor') {
-            // await startCandidate(userType);
             let addresses = [];
             let events = [];
             let posts = [];
@@ -94,16 +71,10 @@ const Load = ({navigation}) => {
             dispatch(startEvents(events));
             dispatch(startPosts(posts));
             dispatch(startCandidate(candidate));
-            return 'CandidatePostsScreen';
-        } else {
-            // await startVoter();
-            return 'VoterHomeScreen';
+            navigation.replace('CandidatePostsScreen');
         }
-    }
-
-    async function startCandidate(candidateType) {}
-
-    async function startVoter() {}
+        start();
+    });
 
     return (
         <Container>
@@ -112,4 +83,4 @@ const Load = ({navigation}) => {
     );
 };
 
-export default Load;
+export default LoadCandidate;

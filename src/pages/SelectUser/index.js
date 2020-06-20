@@ -24,18 +24,18 @@ const SelectUser = ({navigation}) => {
                     iconColor="#fff"
                     callBack={() => {
                         navigation.navigate('SignInScreen', {
-                            signUpScreen: 'CandidateSignUpScreen',
+                            userType: 'candidate',
                         });
                     }}
                 />
                 <Button
-                    title="Sou eleitor"
+                    title="Sou Eleitor"
                     Icon={Icon}
                     iconName="user"
                     iconColor="#fff"
-                    ccallBack={() => {
+                    callBack={() => {
                         navigation.navigate('SignInScreen', {
-                            signUpScren: 'VoterSignUpScreen',
+                            userType: 'voter',
                         });
                     }}
                 />

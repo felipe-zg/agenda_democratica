@@ -42,11 +42,7 @@ const SignIn = ({route, navigation}) => {
 
     // RECEBER O PROPRIEDADE DE TELA DE CADASTRO E PASSÁ-LA PARA O LINK DE CADASTRO SEM O ID
     // ERRO DO JEST DIZENDO QUE ROUTE ERA NULL
-    var signUpScreenToGo = '';
-    if (route) {
-        const {signUpScreen} = route.params;
-        signUpScreenToGo = signUpScreen;
-    }
+    const {userType} = route.params;
 
     function cleanInputs() {
         setEmail('');
@@ -163,7 +159,9 @@ const SignIn = ({route, navigation}) => {
                     callback={handleSignIn}
                 />
                 <SignUpLink
-                    onPress={() => navigation.navigate(signUpScreenToGo)}>
+                    onPress={() =>
+                        navigation.navigate('SignUpScreen', {userType})
+                    }>
                     <Text size="10px">Cadastre-se</Text>
                 </SignUpLink>
             </FormView>

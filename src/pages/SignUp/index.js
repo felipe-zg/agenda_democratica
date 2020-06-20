@@ -1,19 +1,20 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 import Toast from 'react-native-simple-toast';
 import {RadioButton} from 'react-native-paper';
 import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import loadAnimation from '../../../../assets/animations/load.json';
+import loadAnimation from '../../assets/animations/load.json';
 
-import Container from '../../../../components/Container';
-import Input from '../../../../components/Input';
-import Button from '../../../../components/Button';
-import BackButton from '../../../../components/BackButton';
-import Text from '../../../../components/Text';
-import PasswordView from '../../../../components/PasswordView';
+import Container from '../../components/Container';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import BackButton from '../../components/BackButton';
+import Text from '../../components/Text';
+import PasswordView from '../../components/PasswordView';
 import {Form, RadioButtonView} from './styles';
 
 import {
@@ -21,10 +22,10 @@ import {
     isPassword,
     fieldsAreEqual,
     errors,
-} from '../../../../utils/validations';
-import {handleInputChange} from '../../../../utils/handlers';
+} from '../../utils/validations';
+import {handleInputChange} from '../../utils/handlers';
 
-const SignUp = ({navigation}) => {
+const SignUp = ({route, navigation}) => {
     //form
     const [email, setEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
@@ -32,7 +33,7 @@ const SignUp = ({navigation}) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isFirstButtondisabled, setIsFirstButtonDisabled] = useState(true);
     const [firstButtonBackground, setFirstButtonBackground] = useState('#ddd');
-    const [office, setOffice] = useState('prefeito');
+    const [office, setOffice] = useState('mayor');
 
     //first form errors
     const [emailError, setEmailError] = useState(errors.valid);
@@ -61,6 +62,8 @@ const SignUp = ({navigation}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email, confirmEmail, password, confirmPassword]);
 
+    const {userType} = route.params;
+
     function isFormValid() {
         return (
             isEmail(email) &&
@@ -87,15 +90,21 @@ const SignUp = ({navigation}) => {
             setIsLoading(true);
             auth()
                 .createUserWithEmailAndPassword(email, password)
-                .then(() => {
+                .then(async () => {
                     Toast.show('Cadastro realizado com sucesso');
                     setIsLoading(false);
-                    const nextPage =
-                        office == 'prefeito'
-                            ? 'MayorRegisterScreen'
-                            : 'CandidateDashboardScreen';
-                    navigation.popToTop();
-                    navigation.replace(nextPage);
+                    if (userType === 'candidate') {
+                        saveUser(office);
+                        const nextPage =
+                            office == 'mayor'
+                                ? 'MayorRegisterScreen'
+                                : 'CandidateDashboardScreen'; //city councilor screen
+                        navigation.popToTop();
+                        navigation.replace(nextPage);
+                    } else {
+                        saveUser(userType);
+                        navigation.replace('VoterRegisterScreen');
+                    }
                 })
                 .catch((e) => {
                     Toast.show('Algo deu errado no cadastro :(');
@@ -104,6 +113,10 @@ const SignUp = ({navigation}) => {
             setIsLoading(false);
             Toast.show('Algo deu errado no cadastro :(');
         }
+    }
+
+    async function saveUser(type) {
+        await database().ref(`/users/${auth().currentUser.uid}`).set(type);
     }
 
     function togglePassword() {
@@ -246,34 +259,34 @@ const SignUp = ({navigation}) => {
                     returnKeyType="send"
                     onSubmitEditing={() => handleSubmit()}
                 />
-                <View>
-                    <RadioButtonView>
-                        <RadioButton
-                            value="prefeito"
-                            status={
-                                office === 'prefeito' ? 'checked' : 'unchecked'
-                            }
-                            uncheckedColor="#fff"
-                            onPress={() => {
-                                setOffice('prefeito');
-                            }}
-                        />
-                        <Text>Sou candidato a prefeito</Text>
-                    </RadioButtonView>
-                    <RadioButtonView>
-                        <RadioButton
-                            value="vereador"
-                            status={
-                                office === 'vereador' ? 'checked' : 'unchecked'
-                            }
-                            uncheckedColor="#fff"
-                            onPress={() => {
-                                setOffice('vereador');
-                            }}
-                        />
-                        <Text>Sou candidato a vereador</Text>
-                    </RadioButtonView>
-                </View>
+                {userType === 'candidate' && (
+                    <View>
+                        <RadioButtonView>
+                            <RadioButton
+                                value="mayor"
+                                status={
+                                    office === 'mayor' ? 'checked' : 'unchecked'
+                                }
+                                uncheckedColor="#fff"
+                                onPress={setOffice}
+                            />
+                            <Text>Sou candidato a prefeito</Text>
+                        </RadioButtonView>
+                        <RadioButtonView>
+                            <RadioButton
+                                value="cityCouncilor"
+                                status={
+                                    office === 'cityCouncilor'
+                                        ? 'checked'
+                                        : 'unchecked'
+                                }
+                                uncheckedColor="#fff"
+                                onPress={setOffice}
+                            />
+                            <Text>Sou candidato a vereador</Text>
+                        </RadioButtonView>
+                    </View>
+                )}
                 <Button
                     testID="signUp-button"
                     title="Próximo"

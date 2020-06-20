@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
-import SignUp from '~/pages/candidate/register/SignUp';
+import SignUp from '~/pages/SignUp';
 
 const {getByTestId} = render(<SignUp />);
 

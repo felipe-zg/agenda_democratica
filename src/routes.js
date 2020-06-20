@@ -2,12 +2,16 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+//Loads
+import VerifyUser from './pages/Load/verifyUser';
+import LoadCandidate from './pages/Load/loadCandidate';
+
 import Load from './pages/Load';
 import SelectUser from './pages/SelectUser';
 import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 //Candidate register pages
-import CandidateSignUp from './pages/candidate/register/SignUp';
 import MayorRegister from './pages/candidate/register/Mayor';
 import CandidateEventRegister from './pages/candidate/register/Event';
 import CandidateAddressRegister from './pages/candidate/register/Address';
@@ -20,19 +24,26 @@ import GovernmentPlan from './pages/candidate/dashboard/GovernmentPlan';
 import Profile from './pages/candidate/dashboard/Profile';
 import Posts from './pages/candidate/dashboard/Posts';
 
+//Voter screens
+import VoterRegister from './pages/Voter/Register';
+
 const Stack = createStackNavigator();
 
 export default function Routes() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="LoadScreen" headerMode="none">
+            <Stack.Navigator
+                initialRouteName="VoterRegisterScreen"
+                headerMode="none">
+                <Stack.Screen name="VerifyUserScreen" component={VerifyUser} />
+                <Stack.Screen
+                    name="CandidateLoadScreen"
+                    component={LoadCandidate}
+                />
                 <Stack.Screen name="LoadScreen" component={Load} />
                 <Stack.Screen name="SelectUserScreen" component={SelectUser} />
                 <Stack.Screen name="SignInScreen" component={SignIn} />
-                <Stack.Screen
-                    name="CandidateSignUpScreen"
-                    component={CandidateSignUp}
-                />
+                <Stack.Screen name="SignUpScreen" component={SignUp} />
                 <Stack.Screen
                     name="MayorRegisterScreen"
                     component={MayorRegister}
@@ -66,6 +77,10 @@ export default function Routes() {
                     component={Profile}
                 />
                 <Stack.Screen name="CandidatePostsScreen" component={Posts} />
+                <Stack.Screen
+                    name="VoterRegisterScreen"
+                    component={VoterRegister}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
