@@ -6,7 +6,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import VerifyUser from './pages/Load/verifyUser';
 import LoadCandidate from './pages/Load/loadCandidate';
 
-import Load from './pages/Load';
 import SelectUser from './pages/SelectUser';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
@@ -16,7 +15,7 @@ import MayorRegister from './pages/candidate/register/Mayor';
 import CandidateEventRegister from './pages/candidate/register/Event';
 import CandidateAddressRegister from './pages/candidate/register/Address';
 
-//Candidate dashboard
+//Candidate dashboard pages
 import CandidateDashboardMenu from './pages/candidate/dashboard/Dashboard';
 import AddressesList from './pages/candidate/dashboard/AddressesList';
 import EventsList from './pages/candidate/dashboard/EventsList';
@@ -24,8 +23,9 @@ import GovernmentPlan from './pages/candidate/dashboard/GovernmentPlan';
 import Profile from './pages/candidate/dashboard/Profile';
 import Posts from './pages/candidate/dashboard/Posts';
 
-//Voter screens
+//Voter pages
 import VoterRegister from './pages/Voter/Register';
+import VoterHome from './pages/Voter/Home';
 
 const Stack = createStackNavigator();
 
@@ -33,14 +33,13 @@ export default function Routes() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="VoterRegisterScreen"
+                initialRouteName="VerifyUserScreen"
                 headerMode="none">
                 <Stack.Screen name="VerifyUserScreen" component={VerifyUser} />
                 <Stack.Screen
                     name="CandidateLoadScreen"
                     component={LoadCandidate}
                 />
-                <Stack.Screen name="LoadScreen" component={Load} />
                 <Stack.Screen name="SelectUserScreen" component={SelectUser} />
                 <Stack.Screen name="SignInScreen" component={SignIn} />
                 <Stack.Screen name="SignUpScreen" component={SignUp} />
@@ -81,6 +80,7 @@ export default function Routes() {
                     name="VoterRegisterScreen"
                     component={VoterRegister}
                 />
+                <Stack.Screen name="VoterHomeScreen" component={VoterHome} />
             </Stack.Navigator>
         </NavigationContainer>
     );

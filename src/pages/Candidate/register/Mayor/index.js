@@ -22,13 +22,8 @@ import {
     Photo,
 } from './styles';
 
-import {
-    isFullName,
-    isName,
-    isParty,
-    isId,
-    errors,
-} from '../../../../utils/validations';
+import * as validations from '../../../../utils/validations';
+import * as regex from '../../../../utils/regexes';
 import {handleInputChange} from '../../../../utils/handlers';
 
 async function persistPhoto(uId, filePath) {
@@ -63,12 +58,16 @@ const Mayor = ({navigation}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     //second for errors
-    const [nameError, setNameError] = useState(errors.valid);
-    const [campaignNameError, setCampaignNameError] = useState(errors.valid);
-    const [viceNameError, setViceNameError] = useState(errors.valid);
-    const [partyError, setPartyError] = useState(errors.valid);
-    const [numberError, setNumberError] = useState(errors.valid);
-    const [idError, setIdError] = useState(errors.valid);
+    const [nameError, setNameError] = useState(validations.errors.valid);
+    const [campaignNameError, setCampaignNameError] = useState(
+        validations.errors.valid,
+    );
+    const [viceNameError, setViceNameError] = useState(
+        validations.errors.valid,
+    );
+    const [partyError, setPartyError] = useState(validations.errors.valid);
+    const [numberError, setNumberError] = useState(validations.errors.valid);
+    const [idError, setIdError] = useState(validations.errors.valid);
 
     //third and fourth forms
     const [photo, setPhoto] = useState(null);
@@ -110,12 +109,12 @@ const Mayor = ({navigation}) => {
 
     function isFirstFormValid() {
         return (
-            isFullName(name) &&
-            isName(campaignName) &&
-            isName(viceName) &&
-            isParty(party) &&
-            isParty(number) &&
-            isId(id)
+            validations.isFullName(name) &&
+            validations.isName(campaignName) &&
+            validations.isName(viceName) &&
+            validations.isParty(party) &&
+            validations.isParty(number) &&
+            validations.isId(id)
         );
     }
 
@@ -160,8 +159,10 @@ const Mayor = ({navigation}) => {
     function firstForm() {
         return (
             <>
-                {nameError === errors.valid && <Text>Nome completo</Text>}
-                {nameError === errors.invalidFullName && (
+                {nameError === validations.errors.valid && (
+                    <Text>Nome completo</Text>
+                )}
+                {nameError === validations.errors.invalidFullName && (
                     <Text color="#f00" size="8px">
                         {nameError.message}
                     </Text>
@@ -170,25 +171,25 @@ const Mayor = ({navigation}) => {
                     testID="name-input"
                     placeholder="Nome completo do candidato"
                     border={nameError.border}
-                    value={name.replace(/( )+/g, ' ')}
+                    value={regex.removeUnnecessaryBlankSpaces(name)}
                     onChangeText={(name) => {
                         handleInputChange(
                             name,
                             setName,
-                            isFullName,
+                            validations.isFullName,
                             nameError,
                             setNameError,
-                            errors.invalidFullName,
+                            validations.errors.invalidFullName,
                         );
                     }}
                     autoCorrect={false}
                     autoCapitalize="words"
                 />
 
-                {campaignNameError === errors.valid && (
+                {campaignNameError === validations.errors.valid && (
                     <Text>Nome de campanha</Text>
                 )}
-                {campaignNameError === errors.invalidName && (
+                {campaignNameError === validations.errors.invalidName && (
                     <Text color="#f00" size="8px">
                         {campaignNameError.message}
                     </Text>
@@ -197,23 +198,25 @@ const Mayor = ({navigation}) => {
                     testID="campaignName-input"
                     placeholder="Nome de campanha do candidato"
                     border={campaignNameError.border}
-                    value={campaignName.replace(/( )+/g, ' ')}
+                    value={regex.removeUnnecessaryBlankSpaces(campaignName)}
                     onChangeText={(campaignName) => {
                         handleInputChange(
                             campaignName,
                             setCampaignName,
-                            isName,
+                            validations.isName,
                             campaignNameError,
                             setCampaignNameError,
-                            errors.invalidName,
+                            validations.errors.invalidName,
                         );
                     }}
                     autoCorrect={false}
                     autoCapitalize="words"
                 />
 
-                {viceNameError === errors.valid && <Text>Nome do vice</Text>}
-                {viceNameError === errors.invalidName && (
+                {viceNameError === validations.errors.valid && (
+                    <Text>Nome do vice</Text>
+                )}
+                {viceNameError === validations.errors.invalidName && (
                     <Text color="#f00" size="8px">
                         {viceNameError.message}
                     </Text>
@@ -222,23 +225,25 @@ const Mayor = ({navigation}) => {
                     testID="viceName-input"
                     placeholder="Nome do vice"
                     border={viceNameError.border}
-                    value={viceName.replace(/( )+/g, ' ')}
+                    value={regex.removeUnnecessaryBlankSpaces(viceName)}
                     onChangeText={(viceName) => {
                         handleInputChange(
                             viceName,
                             setViceName,
-                            isName,
+                            validations.isName,
                             viceNameError,
                             setViceNameError,
-                            errors.invalidName,
+                            validations.errors.invalidName,
                         );
                     }}
                     autoCorrect={false}
                     autoCapitalize="words"
                 />
 
-                {partyError === errors.valid && <Text>Sigla do partido</Text>}
-                {partyError === errors.invalidParty && (
+                {partyError === validations.errors.valid && (
+                    <Text>Sigla do partido</Text>
+                )}
+                {partyError === validations.errors.invalidParty && (
                     <Text color="#f00" size="8px">
                         {partyError.message}
                     </Text>
@@ -247,25 +252,25 @@ const Mayor = ({navigation}) => {
                     testID="party-input"
                     placeholder="Partido do candidato"
                     border={partyError.border}
-                    value={party.replace(/\s/g, '')}
+                    value={regex.removeAllBlankSpaces(party)}
                     onChangeText={(party) => {
                         handleInputChange(
                             party,
                             setParty,
-                            isParty,
+                            validations.isParty,
                             partyError,
                             setPartyError,
-                            errors.invalidParty,
+                            validations.errors.invalidParty,
                         );
                     }}
                     autoCorrect={false}
                     autoCapitalize="words"
                 />
 
-                {numberError === errors.valid && (
+                {numberError === validations.errors.valid && (
                     <Text>Número do candidato</Text>
                 )}
-                {numberError === errors.invalidNumber && (
+                {numberError === validations.errors.invalidNumber && (
                     <Text color="#f00" size="8px">
                         {numberError.message}
                     </Text>
@@ -275,23 +280,25 @@ const Mayor = ({navigation}) => {
                     placeholder="Número do candidato"
                     border={numberError.border}
                     maxLength={2}
-                    value={number.replace(/\s/g, '')}
+                    value={regex.removeAllBlankSpaces(number)}
                     onChangeText={(number) => {
                         handleInputChange(
                             number,
                             setNumber,
-                            isParty,
+                            validations.isParty,
                             numberError,
                             setNumberError,
-                            errors.invalidNumber,
+                            validations.errors.invalidNumber,
                         );
                     }}
                     keyboardType="numeric"
                     autoCorrect={false}
                 />
 
-                {idError === errors.valid && <Text>Número de registro</Text>}
-                {idError === errors.invalidId && (
+                {idError === validations.errors.valid && (
+                    <Text>Número de registro</Text>
+                )}
+                {idError === validations.errors.invalidId && (
                     <Text color="#f00" size="8px">
                         {idError.message}
                     </Text>
@@ -300,15 +307,15 @@ const Mayor = ({navigation}) => {
                     testID="registerNumber-input"
                     placeholder="Nº registro da candidatura (TSE)"
                     border={idError.border}
-                    value={id.replace(/\s/g, '')}
+                    value={regex.removeAllBlankSpaces(id)}
                     onChangeText={(id) => {
                         handleInputChange(
                             id,
                             setId,
-                            isId,
+                            validations.isId,
                             idError,
                             setIdError,
-                            errors.invalidId,
+                            validations.errors.invalidId,
                         );
                     }}
                     autoCorrect={false}
@@ -382,19 +389,18 @@ const Mayor = ({navigation}) => {
                 <Lottie source={loadAnimation} autoPlay loop />
             </Container>
         );
+    }
+    if (formIndex == 2) {
+        return <Container>{secondForm()}</Container>;
     } else {
-        if (formIndex == 2) {
-            return <Container>{secondForm()}</Container>;
-        } else {
-            return (
-                <Container>
-                    <Form>
-                        {formIndex === 1 && firstForm()}
-                        {formIndex === 3 && thirdForm()}
-                    </Form>
-                </Container>
-            );
-        }
+        return (
+            <Container>
+                <Form>
+                    {formIndex === 1 && firstForm()}
+                    {formIndex === 3 && thirdForm()}
+                </Form>
+            </Container>
+        );
     }
 };
 
