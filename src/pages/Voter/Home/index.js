@@ -22,13 +22,6 @@ const Home = ({navigation}) => {
     const voter = useSelector((state) => state.Voter);
     const [mayors, setMayors] = useState(null);
     const dispatch = useDispatch();
-    // function handlelogout() {
-    //     auth()
-    //         .signOut()
-    //         .then(() => {
-    //             Toast.show('Logou efetuado');
-    //         });
-    // }
 
     useEffect(() => {
         async function getMayors() {

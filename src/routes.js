@@ -28,6 +28,8 @@ import Posts from './pages/candidate/dashboard/Posts';
 import VoterRegister from './pages/Voter/Register';
 import VoterHome from './pages/Voter/Home';
 import CandidateDetails from './pages/Voter/Candidate';
+import EventDetails from './pages/Voter/Event';
+import EventList from './pages/Voter/EventList';
 
 const Stack = createStackNavigator();
 
@@ -88,6 +90,11 @@ export default function Routes() {
                     name="CandidateDetailsScreen"
                     component={CandidateDetails}
                 />
+                <Stack.Screen
+                    name="EventDetailsScreen"
+                    component={EventDetails}
+                />
+                <Stack.Screen name="EventListScreen" component={EventList} />
             </Stack.Navigator>
         </NavigationContainer>
     );

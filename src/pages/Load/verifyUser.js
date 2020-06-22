@@ -12,6 +12,7 @@ import Container from '../../components/Container';
 
 const VerifyUser = ({navigation}) => {
     useEffect(() => {
+        // auth().signOut();
         async function start() {
             const user = auth().currentUser;
             var screen = 'SelectUserScreen';
