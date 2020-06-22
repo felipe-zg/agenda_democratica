@@ -31,7 +31,7 @@ const Dashboard = ({navigation}) => {
                     setIsloading(false);
                     navigation.reset({
                         index: 0,
-                        routes: [{name: 'LoadScreen'}],
+                        routes: [{name: 'VerifyUserScreen'}],
                     });
                 });
         } catch (e) {

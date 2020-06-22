@@ -1,10 +1,13 @@
 import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-simple-toast';
 import Lottie from 'lottie-react-native';
+
+import {startCandidate} from '../../../../store/modules/Candidate/actions';
 
 import loadAnimation from '../../../../assets/animations/load.json';
 
@@ -73,6 +76,8 @@ const Mayor = ({navigation}) => {
     const [photo, setPhoto] = useState(null);
     const [about, setAbout] = useState('');
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
         if (isFirstFormValid()) {
             setIsSecondButtonDisabled(false);
@@ -100,6 +105,7 @@ const Mayor = ({navigation}) => {
             ref.child(key).set(candidate);
             Toast.show('Bem-vindo(a) ao agenda democrática');
             setIsLoading(false);
+            dispatch(startCandidate(candidate));
             navigation.replace('CandidatePostsScreen');
         } catch (e) {
             setIsLoading(false);

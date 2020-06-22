@@ -11,8 +11,6 @@ import Container from '../../components/Container';
 // import { Container } from './styles';
 
 const VerifyUser = ({navigation}) => {
-    const dispatch = useDispatch();
-
     useEffect(() => {
         async function start() {
             const user = auth().currentUser;
@@ -28,6 +26,8 @@ const VerifyUser = ({navigation}) => {
                     });
                 if (userType === 'mayor' || userType === 'cityCouncilor') {
                     screen = 'CandidateLoadScreen';
+                } else {
+                    screen = 'VoterLoadScreen';
                 }
             }
             navigation.replace(screen, {userType});

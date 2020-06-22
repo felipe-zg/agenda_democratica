@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 //Loads
 import VerifyUser from './pages/Load/verifyUser';
 import LoadCandidate from './pages/Load/loadCandidate';
+import LoadVoter from './pages/Load/loadVoter';
 
 import SelectUser from './pages/SelectUser';
 import SignIn from './pages/SignIn';
@@ -26,6 +27,7 @@ import Posts from './pages/candidate/dashboard/Posts';
 //Voter pages
 import VoterRegister from './pages/Voter/Register';
 import VoterHome from './pages/Voter/Home';
+import CandidateDetails from './pages/Voter/Candidate';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +42,7 @@ export default function Routes() {
                     name="CandidateLoadScreen"
                     component={LoadCandidate}
                 />
+                <Stack.Screen name="VoterLoadScreen" component={LoadVoter} />
                 <Stack.Screen name="SelectUserScreen" component={SelectUser} />
                 <Stack.Screen name="SignInScreen" component={SignIn} />
                 <Stack.Screen name="SignUpScreen" component={SignUp} />
@@ -81,6 +84,10 @@ export default function Routes() {
                     component={VoterRegister}
                 />
                 <Stack.Screen name="VoterHomeScreen" component={VoterHome} />
+                <Stack.Screen
+                    name="CandidateDetailsScreen"
+                    component={CandidateDetails}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -8,7 +8,7 @@ import Lottie from 'lottie-react-native';
 import loadAnimation from '../../assets/animations/load.json';
 import Container from '../../components/Container';
 
-import {startAddresses} from '../../store/modules/Address/actions';
+import {startVoter} from '../../store/modules/Voter/actions';
 
 const LoadCandidate = ({navigation}) => {
     const dispatch = useDispatch();
@@ -16,22 +16,21 @@ const LoadCandidate = ({navigation}) => {
         async function start() {
             const user = auth().currentUser;
             let voter = null;
-            //BUSCAR ELEITOR E STARTATR NO REDUCER
-            // await database()
-            //     .ref('voters/')
-            //     .orderByKey()
-            //     .once('value', (snapShot) => {
-            //         if (snapShot.val()) {
-            //             snapShot.forEach((childSnapshot) => {
-            //                 const data = childSnapshot.val();
-            //                 if (data.uId === user.uid) {
-            //                     voter = data;
-            //                 }
-            //             });
-            //         }
-            //     });
+            await database()
+                .ref('voters/')
+                .orderByKey()
+                .once('value', (snapShot) => {
+                    if (snapShot.val()) {
+                        snapShot.forEach((childSnapshot) => {
+                            const data = childSnapshot.val();
+                            if (data.uId === user.uid) {
+                                voter = data;
+                                dispatch(startVoter(voter));
+                            }
+                        });
+                    }
+                });
 
-            // dispatch(startVoter(voter));
             navigation.replace('VoterHomeScreen');
         }
         start();

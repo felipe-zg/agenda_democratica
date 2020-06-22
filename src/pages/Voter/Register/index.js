@@ -5,6 +5,7 @@ import Toast from 'react-native-simple-toast';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import Lottie from 'lottie-react-native';
+import {useDispatch} from 'react-redux';
 
 import loadAnimation from '../../../assets/animations/load.json';
 
@@ -22,6 +23,8 @@ import {errors, isFullName} from '../../../utils/validations';
 import {removeUnnecessaryBlankSpaces} from '../../../utils/regexes';
 import * as handler from '../../../utils/handlers';
 
+import {startVoter} from '../../../store/modules/Voter/actions';
+
 const Register = ({navigation}) => {
     //value
     const [name, setName] = useState('');
@@ -33,6 +36,8 @@ const Register = ({navigation}) => {
 
     //errors
     const [nameError, setNameError] = useState(errors.valid);
+
+    const dispatch = useDispatch();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -92,6 +97,7 @@ const Register = ({navigation}) => {
             const voter = getVoter(user.uid, key, downloadUrl);
             ref.child(key).set(voter);
             Toast.show('Bem-vindo(a) ao agenda democrática');
+            dispatch(startVoter(voter));
             navigation.replace('VoterHomeScreen');
         } catch (e) {
             Toast.show('Algo deu errado');
