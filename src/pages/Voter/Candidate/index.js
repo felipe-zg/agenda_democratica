@@ -1,16 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, FlatList} from 'react-native';
 import database from '@react-native-firebase/database';
 
 import Container from '../../../components/Container';
 import BackButton from '../../../components/BackButton';
 import Text from '../../../components/Text';
 import Event from '../../../components/Event';
+import Post from '../../../components/Post';
 import {Header, Photo, Info, Label, Value, Link} from './styles';
 
 export default function Candidate({route, navigation}) {
     const {candidate} = route.params;
     const [events, setEvents] = useState(null);
+    const [posts, setPosts] = useState(null);
 
     useEffect(() => {
         async function getEvents() {
@@ -28,11 +30,34 @@ export default function Candidate({route, navigation}) {
                         });
                     }
                 });
-            if (!events) {
-                setEvents(returnedEvents);
-            }
+
+            setEvents(returnedEvents);
         }
-        getEvents();
+        async function getPosts() {
+            var returnedPost = [];
+            await database()
+                .ref(`posts/${candidate.uId}`)
+                .orderByKey()
+                .once('value', (snapShot) => {
+                    if (snapShot.val()) {
+                        snapShot.forEach((childSnapshot) => {
+                            returnedPost = [
+                                ...returnedPost,
+                                childSnapshot.val(),
+                            ];
+                        });
+                    }
+                });
+
+            setPosts(returnedPost);
+        }
+
+        if (!events) {
+            getEvents();
+        }
+        if (!posts) {
+            getPosts();
+        }
     });
 
     function renderInfo(label, value) {
@@ -93,6 +118,16 @@ export default function Candidate({route, navigation}) {
                         }>
                         <Text>Ver mais...</Text>
                     </Link>
+                )}
+
+                {posts && (
+                    <FlatList
+                        data={posts}
+                        keyExtractor={(item) => item.postKey}
+                        renderItem={(item) => (
+                            <Post post={item} user={candidate} />
+                        )}
+                    />
                 )}
             </ScrollView>
         </Container>
