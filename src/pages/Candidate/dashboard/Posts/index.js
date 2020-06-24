@@ -210,7 +210,7 @@ const Posts = ({navigation}) => {
                 <PostsList
                     data={posts}
                     renderItem={({item}) => (
-                        <Post post={item} user={candidate} />
+                        <Post post={item} user={candidate} admin={true} />
                     )}
                     keyExtractor={(item) => item.postKey}
                 />

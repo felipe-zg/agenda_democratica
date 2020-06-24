@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView, FlatList} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 import Container from '../../../components/Container';
 import BackButton from '../../../components/BackButton';
@@ -13,6 +14,7 @@ export default function Candidate({route, navigation}) {
     const {candidate} = route.params;
     const [events, setEvents] = useState(null);
     const [posts, setPosts] = useState(null);
+    const [likedPostsList, setLikedPostsList] = useState(null);
 
     useEffect(() => {
         async function getEvents() {
@@ -33,32 +35,57 @@ export default function Candidate({route, navigation}) {
 
             setEvents(returnedEvents);
         }
-        async function getPosts() {
-            var returnedPost = [];
+
+        async function getLikedPosts() {
+            var returnedLikedPOsts = [];
             await database()
-                .ref(`posts/${candidate.uId}`)
+                .ref(`likedPosts/${voter.uid}`)
                 .orderByKey()
                 .once('value', (snapShot) => {
                     if (snapShot.val()) {
                         snapShot.forEach((childSnapshot) => {
-                            returnedPost = [
-                                ...returnedPost,
+                            returnedLikedPOsts = [
+                                ...returnedLikedPOsts,
                                 childSnapshot.val(),
                             ];
                         });
                     }
                 });
 
-            setPosts(returnedPost);
+            setLikedPostsList(returnedLikedPOsts);
+        }
+
+        async function getPosts() {
+            var returnedPosts = [];
+            await database()
+                .ref(`posts/${candidate.uId}`)
+                .orderByKey()
+                .once('value', (snapShot) => {
+                    if (snapShot.val()) {
+                        snapShot.forEach((childSnapshot) => {
+                            returnedPosts = [
+                                ...returnedPosts,
+                                childSnapshot.val(),
+                            ];
+                        });
+                    }
+                });
+
+            setPosts(returnedPosts);
         }
 
         if (!events) {
             getEvents();
         }
+        if (!likedPostsList) {
+            getLikedPosts();
+        }
         if (!posts) {
             getPosts();
         }
     });
+
+    const voter = auth().currentUser;
 
     function renderInfo(label, value) {
         return (
@@ -95,6 +122,29 @@ export default function Candidate({route, navigation}) {
         });
     }
 
+    function renderPosts() {
+        return posts.map((post) => (
+            <Post
+                post={post}
+                user={candidate}
+                admin={false}
+                key={post.postKey}
+                voter={voter}
+                isAlreadyLiked={isPOstLiked(post.postKey)}
+            />
+        ));
+    }
+
+    function isPOstLiked(postKey) {
+        var isLiked = false;
+        likedPostsList.map((key) => {
+            if (key === postKey) {
+                isLiked = true;
+            }
+        });
+        return isLiked;
+    }
+
     return (
         <Container>
             <ScrollView>
@@ -111,7 +161,7 @@ export default function Candidate({route, navigation}) {
                     Eventos
                 </Text>
                 {events && renderEvents()}
-                {events.length > 1 && (
+                {events && events.length > 1 && (
                     <Link
                         onPress={() =>
                             navigation.navigate('EventListScreen', {events})
@@ -120,15 +170,7 @@ export default function Candidate({route, navigation}) {
                     </Link>
                 )}
 
-                {posts && (
-                    <FlatList
-                        data={posts}
-                        keyExtractor={(item) => item.postKey}
-                        renderItem={(item) => (
-                            <Post post={item} user={candidate} />
-                        )}
-                    />
-                )}
+                {posts && <View>{renderPosts()}</View>}
             </ScrollView>
         </Container>
     );

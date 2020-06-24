@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {View, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import database from '@react-native-firebase/database';
 import Toast from 'react-native-simple-toast';
 
@@ -18,8 +19,24 @@ import {
     PostPhoto,
 } from './styles';
 
-const Post = ({post, user}) => {
+const Post = ({post, user, admin, isAlreadyLiked, voter}) => {
     const dispatch = useDispatch();
+    const [isLiked, setIsLiked] = useState(isAlreadyLiked);
+
+    function handleLike() {
+        if (!isLiked) {
+            database()
+                .ref(`likedPosts/${voter.uid}`)
+                .child(post.postKey)
+                .set(post.postKey);
+        } else {
+            database()
+                .ref(`likedPosts/${voter.uid}`)
+                .child(post.postKey)
+                .remove();
+        }
+        setIsLiked(!isLiked);
+    }
 
     function handlePostOptions() {
         Alert.alert(
@@ -77,9 +94,24 @@ const Post = ({post, user}) => {
                     <ProfilePhoto source={{uri: user.photo}} />
                     <Text padding="0 0 0 15px">{user.name}</Text>
                 </Profile>
-                <Touch onPress={handlePostOptions}>
-                    <Icon name="keyboard-arrow-down" color="#fff" size={25} />
-                </Touch>
+                {admin && (
+                    <Touch onPress={handlePostOptions}>
+                        <Icon
+                            name="keyboard-arrow-down"
+                            color="#fff"
+                            size={25}
+                        />
+                    </Touch>
+                )}
+                {!admin && (
+                    <Touch onPress={handleLike}>
+                        <AntIcon
+                            name={isLiked ? 'like1' : 'like2'}
+                            color={isLiked ? '#00f' : '#fff'}
+                            size={25}
+                        />
+                    </Touch>
+                )}
             </PostHeader>
             <Text padding="0 10px 20px 10px" color="#ddd" size="10px">
                 {post.text}
