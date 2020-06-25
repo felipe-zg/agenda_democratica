@@ -29,3 +29,12 @@ export const Value = styled.View`
 export const Link = styled.TouchableOpacity`
     align-self: center;
 `;
+
+export const FollowButton = styled.TouchableOpacity`
+    background: #363636;
+    border-width: 2px;
+    border-color: ${(props) => props.color};
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin-top: 10px;
+`;

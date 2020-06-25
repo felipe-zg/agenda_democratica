@@ -1,20 +1,30 @@
 import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+
+import {
+    addFollowedCandidate,
+    deleteFollowedCandidate,
+} from '../../../store/modules/FollowedCandidates/actions';
 
 import Container from '../../../components/Container';
 import BackButton from '../../../components/BackButton';
 import Text from '../../../components/Text';
 import Event from '../../../components/Event';
 import Post from '../../../components/Post';
-import {Header, Photo, Info, Label, Value, Link} from './styles';
+import {Header, Photo, Info, Label, Value, Link, FollowButton} from './styles';
 
 export default function Candidate({route, navigation}) {
     const {candidate} = route.params;
+    const {voterFollowsCandidate} = route.params;
     const [events, setEvents] = useState(null);
     const [posts, setPosts] = useState(null);
     const [likedPostsList, setLikedPostsList] = useState(null);
+    const [isFollowed, setIsFollowed] = useState(voterFollowsCandidate);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         async function getEvents() {
@@ -145,12 +155,36 @@ export default function Candidate({route, navigation}) {
         return isLiked;
     }
 
+    async function handleFollow() {
+        if (isFollowed) {
+            await database()
+                .ref(`followedCandidates/${voter.uid}`)
+                .child(candidate.candidateKey)
+                .remove();
+            dispatch(deleteFollowedCandidate(candidate.candidateKey));
+        } else {
+            await database()
+                .ref(`followedCandidates/${voter.uid}`)
+                .child(candidate.candidateKey)
+                .set(candidate.candidateKey);
+            dispatch(addFollowedCandidate(candidate.candidateKey));
+        }
+        setIsFollowed(!isFollowed);
+    }
+
     return (
         <Container>
             <ScrollView>
                 <BackButton action={() => navigation.goBack()} />
                 <Header>
                     <Photo source={{uri: candidate.photo}} />
+                    <FollowButton
+                        onPress={handleFollow}
+                        color={isFollowed ? '#f00' : '#00f'}>
+                        <Text>
+                            {isFollowed ? 'Deixar de seguir' : 'Seguir'}
+                        </Text>
+                    </FollowButton>
                 </Header>
                 {renderInfo('Candidato', candidate.campaignName)}
                 {renderInfo('Vice', candidate.viceName)}
@@ -169,7 +203,6 @@ export default function Candidate({route, navigation}) {
                         <Text>Ver mais...</Text>
                     </Link>
                 )}
-
                 {posts && <View>{renderPosts()}</View>}
             </ScrollView>
         </Container>

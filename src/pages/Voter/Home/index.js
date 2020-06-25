@@ -22,6 +22,7 @@ const Home = ({navigation}) => {
     const voter = useSelector((state) => state.Voter);
     const [mayors, setMayors] = useState(null);
     const dispatch = useDispatch();
+    const followedCandidates = useSelector((state) => state.FollowedCandidates);
 
     useEffect(() => {
         async function getMayors() {
@@ -53,6 +54,16 @@ const Home = ({navigation}) => {
             });
     }
 
+    function isFollowed(candidateKey) {
+        var status = false;
+        followedCandidates.map((followed) => {
+            if (followed === candidateKey) {
+                status = true;
+            }
+        });
+        return status;
+    }
+
     function renderMayors() {
         return mayors.map((mayor) => {
             return (
@@ -61,6 +72,9 @@ const Home = ({navigation}) => {
                     onPress={() =>
                         navigation.navigate('CandidateDetailsScreen', {
                             candidate: mayor,
+                            voterFollowsCandidate: isFollowed(
+                                mayor.candidateKey,
+                            ),
                         })
                     }>
                     <Candidate source={{uri: mayor.photo}}>

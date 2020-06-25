@@ -9,6 +9,7 @@ import loadAnimation from '../../assets/animations/load.json';
 import Container from '../../components/Container';
 
 import {startVoter} from '../../store/modules/Voter/actions';
+import {startFollowedCandidatesList} from '../../store/modules/FollowedCandidates/actions';
 
 const LoadCandidate = ({navigation}) => {
     const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const LoadCandidate = ({navigation}) => {
         async function start() {
             const user = auth().currentUser;
             let voter = null;
+            var followedCandidates = [];
             await database()
                 .ref('voters/')
                 .orderByKey()
@@ -30,6 +32,21 @@ const LoadCandidate = ({navigation}) => {
                         });
                     }
                 });
+            await database()
+                .ref(`followedCandidates/${user.uid}`)
+                .orderByKey()
+                .once('value', (snapShot) => {
+                    if (snapShot.val()) {
+                        snapShot.forEach((childSnapshot) => {
+                            followedCandidates = [
+                                ...followedCandidates,
+                                childSnapshot.val(),
+                            ];
+                        });
+                    }
+                });
+
+            dispatch(startFollowedCandidatesList(followedCandidates));
 
             navigation.replace('VoterHomeScreen');
         }
