@@ -31,7 +31,8 @@ export default function Candidate({route, navigation}) {
             var returnedEvents = [];
             await database()
                 .ref(`events/${candidate.uId}`)
-                .orderByKey()
+                .orderByChild('date')
+                .limitToFirst(3)
                 .once('value', (snapShot) => {
                     if (snapShot.val()) {
                         snapShot.forEach((childSnapshot) => {
@@ -198,7 +199,9 @@ export default function Candidate({route, navigation}) {
                 {events && events.length > 1 && (
                     <Link
                         onPress={() =>
-                            navigation.navigate('EventListScreen', {events})
+                            navigation.navigate('EventListScreen', {
+                                uid: candidate.uId,
+                            })
                         }>
                         <Text>Ver mais...</Text>
                     </Link>
