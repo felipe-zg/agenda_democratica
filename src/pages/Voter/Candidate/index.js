@@ -113,6 +113,7 @@ export default function Candidate({route, navigation}) {
 
     function renderEvents() {
         var max = 0;
+        const uid = candidate.uId;
         return events.map((event) => {
             if (max === 3) {
                 return;
@@ -125,8 +126,8 @@ export default function Candidate({route, navigation}) {
                     event={event}
                     callback={() =>
                         navigation.navigate('EventDetailsScreen', {
-                            event,
                             uid: candidate.uId,
+                            event,
                         })
                     }
                 />

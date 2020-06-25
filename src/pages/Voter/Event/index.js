@@ -25,20 +25,19 @@ const getPhoto = (category) => {
 };
 
 const Event = ({route, navigation}) => {
-    const {event} = route.params;
-    const {uId} = route.params;
     const [address, setAddress] = useState(null);
-    console.warn(uId);
+    const {event, uid} = route.params;
 
     useEffect(() => {
         async function getAddress() {
             await database()
-                .ref(`addresses/${uId}`)
-                .orderByKey()
+                .ref(`addresses/${uid}`)
+                .orderByChild('addressKey')
+                .equalTo(event.address)
                 .once('value', (snapShot) => {
                     if (snapShot.val()) {
                         snapShot.forEach((childSnapshot) => {
-                            console.warn(childSnapshot);
+                            setAddress(childSnapshot);
                         });
                     }
                 });
@@ -64,6 +63,13 @@ const Event = ({route, navigation}) => {
             {address && (
                 <InfoView>
                     <Text>{address.street}</Text>
+                    <Text>{address.city}</Text>
+                    <Text>{address.number}</Text>
+                </InfoView>
+            )}
+            {!address && (
+                <InfoView>
+                    <Text>carregando endereço...</Text>
                 </InfoView>
             )}
         </Container>
