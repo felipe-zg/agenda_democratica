@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
@@ -24,6 +24,7 @@ export default function Candidate({route, navigation}) {
     const [likedPostsList, setLikedPostsList] = useState(null);
     const [isFollowed, setIsFollowed] = useState(voterFollowsCandidate);
 
+    const favoriteEvents = useSelector((state) => state.FavoriteEvents);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -128,6 +129,7 @@ export default function Candidate({route, navigation}) {
                         navigation.navigate('EventDetailsScreen', {
                             uid: candidate.uId,
                             event,
+                            isFave: isEventFavorite(event.eventKey),
                         })
                     }
                 />
@@ -156,6 +158,16 @@ export default function Candidate({route, navigation}) {
             }
         });
         return isLiked;
+    }
+
+    function isEventFavorite(eventKey) {
+        var isFave = false;
+        favoriteEvents.map((key) => {
+            if (key === eventKey) {
+                isFave = true;
+            }
+        });
+        return isFave;
     }
 
     async function handleFollow() {
