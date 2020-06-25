@@ -126,6 +126,7 @@ export default function Candidate({route, navigation}) {
                     callback={() =>
                         navigation.navigate('EventDetailsScreen', {
                             event,
+                            uid: candidate.uId,
                         })
                     }
                 />
@@ -176,7 +177,7 @@ export default function Candidate({route, navigation}) {
     return (
         <Container>
             <ScrollView>
-                <BackButton action={() => navigation.goBack()} />
+                <BackButton title="voltar" action={() => navigation.goBack()} />
                 <Header>
                     <Photo source={{uri: candidate.photo}} />
                     <FollowButton

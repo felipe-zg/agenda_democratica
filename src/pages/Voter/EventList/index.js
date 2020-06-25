@@ -28,8 +28,6 @@ const EventList = ({route, navigation}) => {
                         });
                     }
                 });
-            console.warn(returnedEvents);
-
             setEvents(returnedEvents);
         }
         if (!events) {
@@ -40,23 +38,20 @@ const EventList = ({route, navigation}) => {
     return (
         <Container>
             <BackButton title="voltar" action={() => navigation.goBack()} />
-            {events && (
-                <Events
-                    data={events}
-                    renderItem={({item}) => (
-                        <Event
-                            event={item}
-                            callback={() =>
-                                navigation.navigate('EventDetailsScreen', {
-                                    event: item,
-                                })
-                            }
-                        />
-                    )}
-                    keyExtractor={(item) => item.eventKey}
-                />
-            )}
-            {!events && <Text>Carregando eventos</Text>}
+            <Events
+                data={events}
+                renderItem={({item}) => (
+                    <Event
+                        event={item}
+                        callback={() =>
+                            navigation.navigate('EventDetailsScreen', {
+                                event: item,
+                            })
+                        }
+                    />
+                )}
+                keyExtractor={(item) => item.eventKey}
+            />
         </Container>
     );
 };
