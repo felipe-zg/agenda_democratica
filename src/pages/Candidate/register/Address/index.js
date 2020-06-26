@@ -1,9 +1,11 @@
-import React, {useState, useEffect, isValidElement} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-simple-toast';
 import Lottie from 'lottie-react-native';
+import Geocoder from 'react-native-geocoding';
+import {MAPS_API_KEY} from 'react-native-dotenv';
 
 import loadAnimation from '../../../../assets/animations/load.json';
 
@@ -57,7 +59,7 @@ const Address = ({navigation}) => {
         );
     }
 
-    function getAddress(addressKey) {
+    function getAddress(addressKey, latitude, longitude) {
         return {
             street,
             county,
@@ -65,7 +67,31 @@ const Address = ({navigation}) => {
             city,
             cep,
             addressKey,
+            latitude,
+            longitude,
         };
+    }
+
+    async function getGeolocation() {
+        const mapsAddres = `${street}, ${number}, ${county}, - ${city}, Rio De Janeiro`;
+        Geocoder.init(MAPS_API_KEY);
+        var geolocation = null;
+        await Geocoder.from(mapsAddres)
+            .then((json) => {
+                var location = json.results[0].geometry.location;
+                const latitude = location.lat;
+                const longitude = location.lng;
+                console.warn(latitude);
+                console.warn(longitude);
+                geolocation = {
+                    latitude,
+                    longitude,
+                };
+            })
+            .catch((e) => {
+                console.warn(e);
+            });
+        return geolocation;
     }
 
     async function handleRegister() {
@@ -74,7 +100,12 @@ const Address = ({navigation}) => {
             const user = auth().currentUser;
             const ref = database().ref(`/addresses/${user.uid}`);
             const addressKey = ref.push().key;
-            const address = getAddress(addressKey);
+            const geolocatedAddress = await getGeolocation();
+            const address = getAddress(
+                addressKey,
+                geolocatedAddress.latitude,
+                geolocatedAddress.longitude,
+            );
             await ref.child(addressKey).set(address);
             dispacth(addAddress(address));
             Toast.show('Endereço cadastrado com sucesso');
@@ -82,6 +113,7 @@ const Address = ({navigation}) => {
             navigation.replace('CandidateAddressesListScreen');
         } catch (e) {
             setIsLoading(false);
+            console.warn(e);
             Toast.show('Erro ao cadastrar endereço');
         }
     }
