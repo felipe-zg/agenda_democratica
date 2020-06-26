@@ -29,11 +29,10 @@ export const isCep = (cep) => {
 };
 
 export const isDate = (date) => {
-    var ardt = new Array();
     var ExpReg = new RegExp(
         '(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}',
     );
-    ardt = date.split('/');
+    var ardt = date.split('/');
     var erro = false;
     if (date.search(ExpReg) == -1) {
         erro = true;
@@ -50,7 +49,19 @@ export const isDate = (date) => {
             erro = true;
         }
     }
+    if (!erro) {
+        if (!isAFutureDate(date)) {
+            erro = true;
+        }
+    }
     return erro ? false : true;
+};
+
+const isAFutureDate = (date) => {
+    let parts = date.split('/');
+    let today = new Date();
+    date = new Date(parts[2], parts[1] - 1, parts[0]);
+    return date >= today ? true : false;
 };
 
 export const HasMinChars = (value, minChars) => {
