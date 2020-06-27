@@ -97,11 +97,15 @@ const Posts = ({navigation}) => {
                 postKey: key,
                 text: post,
                 photo: downloadUrl,
+                userName: candidate.campaignName,
+                userPhoto: candidate.photo,
             });
         } else {
             savePost(ref, key, {
                 postKey: key,
                 text: post,
+                userName: candidate.campaignName,
+                userPhoto: candidate.photo,
             });
         }
         setPost('');

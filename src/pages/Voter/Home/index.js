@@ -18,6 +18,7 @@ import {
     CandidateName,
     Row,
 } from './styles';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Home = ({navigation}) => {
     const voter = useSelector((state) => state.Voter);
@@ -42,26 +43,33 @@ const Home = ({navigation}) => {
             setMayors(candidates);
         }
         async function getFollowedCandidatesPosts() {
-            var posts = [];
             followedCandidates.map(async (candidate) => {
+                var returnedPosts = [];
                 await database()
                     .ref(`posts/${candidate.uId}`)
                     .orderByKey()
                     .once('value', (snapShot) => {
                         if (snapShot.val()) {
                             snapShot.forEach((childSnapshot) => {
-                                posts = [...posts, childSnapshot.val()];
+                                returnedPosts = [
+                                    ...returnedPosts,
+                                    childSnapshot.val(),
+                                ];
                             });
                         }
                     });
+                if (posts) {
+                    setPosts([...posts, returnedPosts]);
+                } else {
+                    setPosts(returnedPosts);
+                }
             });
-            setPosts(posts);
         }
         if (!mayors) {
             getMayors();
         }
         if (!posts) {
-            getFollowedCandidatesPosts(0);
+            getFollowedCandidatesPosts();
         }
     });
 
@@ -91,10 +99,6 @@ const Home = ({navigation}) => {
         return posts.map((post) => (
             <Post
                 post={post}
-                user={{
-                    name: 'felipe teste',
-                    photo: 'null',
-                }}
                 admin={false}
                 key={post.postKey}
                 voter={voter}
@@ -147,19 +151,21 @@ const Home = ({navigation}) => {
                     <Text>Sair</Text>
                 </TouchableOpacity>
             </Header>
-            <CandidatesView>
-                <Text size="18px" padding="0 0 0 20px;">
-                    Prefeitos
-                </Text>
-                {mayors && (
-                    <CandidatesRow horizontal={true}>
-                        {renderMayors()}
-                    </CandidatesRow>
-                )}
-            </CandidatesView>
-            <Text size="18px">Vereadores</Text>
-            <CandidatesRow>{renderCityCouncilors()}</CandidatesRow>
-            {posts && <View>{renderPosts()}</View>}
+            <ScrollView>
+                <CandidatesView>
+                    <Text size="18px" padding="0 0 0 20px;">
+                        Prefeitos
+                    </Text>
+                    {mayors && (
+                        <CandidatesRow horizontal={true}>
+                            {renderMayors()}
+                        </CandidatesRow>
+                    )}
+                </CandidatesView>
+                <Text size="18px">Vereadores</Text>
+                <CandidatesRow>{renderCityCouncilors()}</CandidatesRow>
+                {posts && <View>{renderPosts()}</View>}
+            </ScrollView>
         </Container>
     );
 };

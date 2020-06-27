@@ -91,8 +91,8 @@ const Post = ({post, user, admin, isAlreadyLiked, voter}) => {
         <Container>
             <PostHeader>
                 <Profile>
-                    <ProfilePhoto source={{uri: user.photo}} />
-                    <Text padding="0 0 0 15px">{user.name}</Text>
+                    <ProfilePhoto source={{uri: post.userPhoto}} />
+                    <Text padding="0 0 0 15px">{post.userName}</Text>
                 </Profile>
                 {admin && (
                     <Touch onPress={handlePostOptions}>

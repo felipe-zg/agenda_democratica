@@ -141,7 +141,6 @@ export default function Candidate({route, navigation}) {
         return posts.map((post) => (
             <Post
                 post={post}
-                user={candidate}
                 admin={false}
                 key={post.postKey}
                 voter={voter}
@@ -184,11 +183,15 @@ export default function Candidate({route, navigation}) {
                 .set({
                     key: candidate.candidateKey,
                     uId: candidate.uId,
+                    name: candidate.campaignName,
+                    photo: candidate.photo,
                 });
             dispatch(
                 addFollowedCandidate({
                     key: candidate.candidateKey,
                     uId: candidate.uId,
+                    name: candidate.campaignName,
+                    photo: candidate.photo,
                 }),
             );
         }
