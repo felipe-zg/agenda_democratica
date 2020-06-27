@@ -16,16 +16,39 @@ import {deleteAddress} from '../../../../store/modules/Address/actions';
 const AddressesList = ({navigation}) => {
     const addresses = useSelector((state) => state.Addresses);
     const dispatch = useDispatch();
+    const user = auth().currentUser;
 
     async function handleDeleteAddress(key) {
         try {
-            const user = auth().currentUser;
+            if (await isAddressBeingUsedByAnyEvent(key)) {
+                Toast.show(
+                    'O endereço está sendo usado por algum evento e não pode ser excluído',
+                );
+                return;
+            }
             await database().ref(`/addresses/${user.uid}/`).child(key).remove();
             dispatch(deleteAddress(key));
             Toast.show('Endereço excluído com sucesso');
         } catch (e) {
             Toast.show('Erro ao excluir endereço');
         }
+    }
+
+    async function isAddressBeingUsedByAnyEvent(key) {
+        var isBeingUsed = false;
+        await database()
+            .ref(`/events/${user.uid}/`)
+            .orderByKey()
+            .once('value', (snapShot) => {
+                if (snapShot.val()) {
+                    snapShot.forEach((childSnapshot) => {
+                        if (childSnapshot.val().address === key) {
+                            isBeingUsed = true;
+                        }
+                    });
+                }
+            });
+        return isBeingUsed;
     }
 
     function renderAddress(address) {
