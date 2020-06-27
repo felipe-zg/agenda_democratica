@@ -181,8 +181,16 @@ export default function Candidate({route, navigation}) {
             await database()
                 .ref(`followedCandidates/${voter.uid}`)
                 .child(candidate.candidateKey)
-                .set(candidate.candidateKey);
-            dispatch(addFollowedCandidate(candidate.candidateKey));
+                .set({
+                    key: candidate.candidateKey,
+                    uId: candidate.uId,
+                });
+            dispatch(
+                addFollowedCandidate({
+                    key: candidate.candidateKey,
+                    uId: candidate.uId,
+                }),
+            );
         }
         setIsFollowed(!isFollowed);
     }

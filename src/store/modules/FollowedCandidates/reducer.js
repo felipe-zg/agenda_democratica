@@ -16,7 +16,7 @@ export default function FollowedCandidates(state = INITIAL_STATE, action) {
             }
             case '@FollowedCandidates/DELETE_FOLLOWED_CANDIDATE': {
                 const index = draft.findIndex(
-                    (followed) => followed === action.candidate,
+                    (followed) => followed.key === action.candidate.key,
                 );
                 draft.splice(index, 1);
                 break;

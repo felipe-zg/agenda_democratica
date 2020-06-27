@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 
 import {clearUser} from '../../../store/modules/Voter/actions';
 
 import Container from '../../../components/Container';
+import Post from '../../../components/Post';
 import Text from '../../../components/Text';
 import {
     Header,
@@ -20,9 +21,10 @@ import {
 
 const Home = ({navigation}) => {
     const voter = useSelector((state) => state.Voter);
-    const [mayors, setMayors] = useState(null);
-    const dispatch = useDispatch();
     const followedCandidates = useSelector((state) => state.FollowedCandidates);
+    const [mayors, setMayors] = useState(null);
+    const [posts, setPosts] = useState(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         async function getMayors() {
@@ -39,7 +41,28 @@ const Home = ({navigation}) => {
                 });
             setMayors(candidates);
         }
-        getMayors();
+        async function getFollowedCandidatesPosts() {
+            var posts = [];
+            followedCandidates.map(async (candidate) => {
+                await database()
+                    .ref(`posts/${candidate.uId}`)
+                    .orderByKey()
+                    .once('value', (snapShot) => {
+                        if (snapShot.val()) {
+                            snapShot.forEach((childSnapshot) => {
+                                posts = [...posts, childSnapshot.val()];
+                            });
+                        }
+                    });
+            });
+            setPosts(posts);
+        }
+        if (!mayors) {
+            getMayors();
+        }
+        if (!posts) {
+            getFollowedCandidatesPosts(0);
+        }
     });
 
     function handleSignOut() {
@@ -57,12 +80,38 @@ const Home = ({navigation}) => {
     function isFollowed(candidateKey) {
         var status = false;
         followedCandidates.map((followed) => {
-            if (followed === candidateKey) {
+            if (followed.key === candidateKey) {
                 status = true;
             }
         });
         return status;
     }
+
+    function renderPosts() {
+        return posts.map((post) => (
+            <Post
+                post={post}
+                user={{
+                    name: 'felipe teste',
+                    photo: 'null',
+                }}
+                admin={false}
+                key={post.postKey}
+                voter={voter}
+                isAlreadyLiked={false /*isPOstLiked(post.postKey)*/}
+            />
+        ));
+    }
+
+    // function isPOstLiked(postKey) {
+    //     var isLiked = false;
+    //     likedPostsList.map((key) => {
+    //         if (key === postKey) {
+    //             isLiked = true;
+    //         }
+    //     });
+    //     return isLiked;
+    // }
 
     function renderMayors() {
         return mayors.map((mayor) => {
@@ -110,6 +159,7 @@ const Home = ({navigation}) => {
             </CandidatesView>
             <Text size="18px">Vereadores</Text>
             <CandidatesRow>{renderCityCouncilors()}</CandidatesRow>
+            {posts && <View>{renderPosts()}</View>}
         </Container>
     );
 };
