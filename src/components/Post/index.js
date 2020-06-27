@@ -7,6 +7,7 @@ import database from '@react-native-firebase/database';
 import Toast from 'react-native-simple-toast';
 
 import {deletePost} from '../../store/modules/Posts/actions';
+import {likePost, dislikePost} from '../../store/modules/LikedPosts/actions';
 
 import Text from '../Text';
 
@@ -23,17 +24,19 @@ const Post = ({post, user, admin, isAlreadyLiked, voter}) => {
     const dispatch = useDispatch();
     const [isLiked, setIsLiked] = useState(isAlreadyLiked);
 
-    function handleLike() {
+    async function handleLike() {
         if (!isLiked) {
-            database()
+            await database()
                 .ref(`likedPosts/${voter.uid}`)
                 .child(post.postKey)
                 .set(post.postKey);
+            dispatch(likePost(post.postKey));
         } else {
-            database()
+            await database()
                 .ref(`likedPosts/${voter.uid}`)
                 .child(post.postKey)
                 .remove();
+            dispatch(dislikePost(post.postKey));
         }
         setIsLiked(!isLiked);
     }

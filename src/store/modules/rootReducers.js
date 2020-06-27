@@ -6,6 +6,7 @@ import Candidate from './Candidate/reducer';
 import Voter from './Voter/reducer';
 import FollowedCandidates from './FollowedCandidates/reducer';
 import FavoriteEvents from './FavoriteEvents/reducer';
+import LikedPosts from './LikedPosts/reducer';
 
 const rootReducer = combineReducers({
     Addresses,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     Voter,
     FollowedCandidates,
     FavoriteEvents,
+    LikedPosts,
 });
 
 export default rootReducer;

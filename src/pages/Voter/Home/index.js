@@ -23,6 +23,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 const Home = ({navigation}) => {
     const voter = useSelector((state) => state.Voter);
     const followedCandidates = useSelector((state) => state.FollowedCandidates);
+    const likedPosts = useSelector((state) => state.LikedPosts);
     const [mayors, setMayors] = useState(null);
     const [posts, setPosts] = useState(null);
     const dispatch = useDispatch();
@@ -73,6 +74,8 @@ const Home = ({navigation}) => {
         }
     });
 
+    useEffect(() => {}, [likedPosts]);
+
     function handleSignOut() {
         auth()
             .signOut()
@@ -102,20 +105,20 @@ const Home = ({navigation}) => {
                 admin={false}
                 key={post.postKey}
                 voter={voter}
-                isAlreadyLiked={false /*isPOstLiked(post.postKey)*/}
+                isAlreadyLiked={isPOstLiked(post.postKey)}
             />
         ));
     }
 
-    // function isPOstLiked(postKey) {
-    //     var isLiked = false;
-    //     likedPostsList.map((key) => {
-    //         if (key === postKey) {
-    //             isLiked = true;
-    //         }
-    //     });
-    //     return isLiked;
-    // }
+    function isPOstLiked(postKey) {
+        var isLiked = false;
+        likedPosts.map((key) => {
+            if (key === postKey) {
+                isLiked = true;
+            }
+        });
+        return isLiked;
+    }
 
     function renderMayors() {
         return mayors.map((mayor) => {

@@ -11,6 +11,7 @@ import Container from '../../components/Container';
 import {startVoter} from '../../store/modules/Voter/actions';
 import {startFollowedCandidatesList} from '../../store/modules/FollowedCandidates/actions';
 import {startFavoriteEventsList} from '../../store/modules/FavoriteEvents/actions';
+import {startLikedPostsList} from '../../store/modules/LikedPosts/actions';
 
 const LoadCandidate = ({navigation}) => {
     const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const LoadCandidate = ({navigation}) => {
             let voter = null;
             var followedCandidates = [];
             var favoriteEvents = [];
+            var likedPosts = [];
             await database()
                 .ref('voters/')
                 .orderByKey()
@@ -62,7 +64,19 @@ const LoadCandidate = ({navigation}) => {
                     }
                 });
 
+            await database()
+                .ref(`likedPosts/${user.uid}`)
+                .orderByKey()
+                .once('value', (snapShot) => {
+                    if (snapShot.val()) {
+                        snapShot.forEach((childSnapshot) => {
+                            likedPosts = [...likedPosts, childSnapshot.val()];
+                        });
+                    }
+                });
+
             dispatch(startFollowedCandidatesList(followedCandidates));
+            dispatch(startLikedPostsList(likedPosts));
             dispatch(startFavoriteEventsList(favoriteEvents));
 
             navigation.replace('VoterHomeScreen');

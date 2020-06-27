@@ -21,10 +21,11 @@ export default function Candidate({route, navigation}) {
     const {voterFollowsCandidate} = route.params;
     const [events, setEvents] = useState(null);
     const [posts, setPosts] = useState(null);
-    const [likedPostsList, setLikedPostsList] = useState(null);
     const [isFollowed, setIsFollowed] = useState(voterFollowsCandidate);
 
     const favoriteEvents = useSelector((state) => state.FavoriteEvents);
+    const likedPosts = useSelector((state) => state.LikedPosts);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -48,25 +49,6 @@ export default function Candidate({route, navigation}) {
             setEvents(returnedEvents);
         }
 
-        async function getLikedPosts() {
-            var returnedLikedPOsts = [];
-            await database()
-                .ref(`likedPosts/${voter.uid}`)
-                .orderByKey()
-                .once('value', (snapShot) => {
-                    if (snapShot.val()) {
-                        snapShot.forEach((childSnapshot) => {
-                            returnedLikedPOsts = [
-                                ...returnedLikedPOsts,
-                                childSnapshot.val(),
-                            ];
-                        });
-                    }
-                });
-
-            setLikedPostsList(returnedLikedPOsts);
-        }
-
         async function getPosts() {
             var returnedPosts = [];
             await database()
@@ -88,9 +70,6 @@ export default function Candidate({route, navigation}) {
 
         if (!events) {
             getEvents();
-        }
-        if (!likedPostsList) {
-            getLikedPosts();
         }
         if (!posts) {
             getPosts();
@@ -151,7 +130,7 @@ export default function Candidate({route, navigation}) {
 
     function isPOstLiked(postKey) {
         var isLiked = false;
-        likedPostsList.map((key) => {
+        likedPosts.map((key) => {
             if (key === postKey) {
                 isLiked = true;
             }
