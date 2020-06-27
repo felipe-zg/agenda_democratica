@@ -95,7 +95,12 @@ const Post = ({post, user, admin, isAlreadyLiked, voter}) => {
             <PostHeader>
                 <Profile>
                     <ProfilePhoto source={{uri: post.userPhoto}} />
-                    <Text padding="0 0 0 15px">{post.userName}</Text>
+                    <View>
+                        <Text padding="0 0 0 15px">{post.userName}</Text>
+                        <Text padding="0 0 0 15px" size="8px">
+                            {post.date} às {post.time}
+                        </Text>
+                    </View>
                 </Profile>
                 {admin && (
                     <Touch onPress={handlePostOptions}>

@@ -80,36 +80,57 @@ const Posts = ({navigation}) => {
         });
     }
 
+    function getDate() {
+        const date = new Date();
+        return `${date.getDate()}/${
+            date.getMonth() + 1
+        } de ${date.getFullYear()}`;
+    }
+
+    function getTime() {
+        const date = new Date();
+        return `${date.getHours()}:${date.getMinutes()}`;
+    }
+
     async function handlePost() {
-        setIsLoading(true);
-        const uId = auth().currentUser.uid;
+        try {
+            setIsLoading(true);
+            const uId = auth().currentUser.uid;
+            const date = getDate();
+            const time = getTime();
+            const ref = database().ref(`/posts/${uId}`);
+            const key = ref.push().key;
 
-        const ref = database().ref(`/posts/${uId}`);
-        const key = ref.push().key;
-
-        var downloadUrl = '';
-        if (photo) {
-            await persistPhoto(`posts/${uId}/${key}/photo.jpg`, photo.path);
-            downloadUrl = await getPhotoDownloadUrl(
-                `posts/${uId}/${key}/photo.jpg`,
-            );
-            savePost(ref, key, {
-                postKey: key,
-                text: post,
-                photo: downloadUrl,
-                userName: candidate.campaignName,
-                userPhoto: candidate.photo,
-            });
-        } else {
-            savePost(ref, key, {
-                postKey: key,
-                text: post,
-                userName: candidate.campaignName,
-                userPhoto: candidate.photo,
-            });
+            var downloadUrl = '';
+            if (photo) {
+                await persistPhoto(`posts/${uId}/${key}/photo.jpg`, photo.path);
+                downloadUrl = await getPhotoDownloadUrl(
+                    `posts/${uId}/${key}/photo.jpg`,
+                );
+                savePost(ref, key, {
+                    postKey: key,
+                    text: post,
+                    photo: downloadUrl,
+                    userName: candidate.campaignName,
+                    userPhoto: candidate.photo,
+                    date,
+                    time,
+                });
+            } else {
+                savePost(ref, key, {
+                    postKey: key,
+                    text: post,
+                    userName: candidate.campaignName,
+                    userPhoto: candidate.photo,
+                    date,
+                    time,
+                });
+            }
+            setPost('');
+            setPhoto(null);
+        } catch (e) {
+            Toast.show('Algo deu errado');
         }
-        setPost('');
-        setPhoto(null);
     }
 
     async function savePost(ref, key, post) {
