@@ -26,7 +26,7 @@ const Event = ({event, callback}) => {
         <EventItem onPress={() => callback()}>
             <Photo source={getPhoto(event.category)} />
             <Data>
-                <Text size="15px" numberOfLines={2}>
+                <Text size="15px" numberOfLines={1}>
                     {event.title}
                 </Text>
                 <Text color="#ddd">{event.date}</Text>

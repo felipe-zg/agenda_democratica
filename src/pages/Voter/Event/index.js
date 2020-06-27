@@ -1,9 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    NavigationApps,
+    actions,
+    googleMapsTravelModes,
+    mapsTravelModes,
+} from 'react-native-navigation-apps';
 
 import {
     addFavoriteEvent,
@@ -104,7 +110,43 @@ const Event = ({route, navigation}) => {
 
             <Row>
                 <Touch background="#00f">
-                    <Icon name="car-hatchback" color="#fff" size={35} />
+                    {/* <Icon name="car-hatchback" color="#fff" size={35} /> */}
+                    {address && (
+                        <NavigationApps
+                            viewMode="sheet"
+                            actionsheetTitle="Escolha seu mapa"
+                            actionSheetBtnCloseTitle="Cancelar"
+                            actionSheetBtnOpenTitle={
+                                <Icon
+                                    name="car-hatchback"
+                                    color="#fff"
+                                    size={30}
+                                />
+                            }
+                            modalBtnOpenStyle={styles.mapBtnOpen}
+                            address=""
+                            waze={{
+                                address: '',
+                                lat: address.latitude,
+                                lon: address.longitude,
+                                action: actions.navigateByLatAndLon,
+                            }}
+                            googleMaps={{
+                                address: '',
+                                lat: address.latitude,
+                                lon: address.longitude,
+                                action: actions.navigateByLatAndLon,
+                                travelMode: googleMapsTravelModes.driving,
+                            }}
+                            maps={{
+                                address: '',
+                                lat: address.latitude,
+                                lon: address.longitude,
+                                action: actions.navigateByLatAndLon,
+                                travelMode: mapsTravelModes.driving,
+                            }}
+                        />
+                    )}
                 </Touch>
                 <Touch
                     background={isFavorite ? '#f00' : '#00f'}
@@ -115,5 +157,17 @@ const Event = ({route, navigation}) => {
         </Container>
     );
 };
+
+const styles = StyleSheet.create({
+    mapBtnOpen: {
+        height: 50,
+        width: 50,
+        borderRadius: 25,
+        backgroundColor: '#00f',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+    },
+});
 
 export default Event;
