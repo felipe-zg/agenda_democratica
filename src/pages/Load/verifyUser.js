@@ -14,6 +14,7 @@ const VerifyUser = ({navigation}) => {
     useEffect(() => {
         // auth().signOut();
         async function start() {
+            auth().signOut();
             const user = auth().currentUser;
             var screen = 'SelectUserScreen';
             var userType = '';

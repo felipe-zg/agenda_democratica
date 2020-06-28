@@ -45,11 +45,12 @@ async function getPhotoDownloadUrl(uId) {
     }
 }
 
-const Mayor = ({navigation}) => {
+const Mayor = ({route, navigation}) => {
     //second form
     const [name, setName] = useState('');
     const [campaignName, setCampaignName] = useState('');
     const [viceName, setViceName] = useState('');
+    const [representedCounty, setRepresentedCounty] = useState('');
     const [party, setParty] = useState('');
     const [number, setNumber] = useState('');
     const [id, setId] = useState('');
@@ -66,6 +67,9 @@ const Mayor = ({navigation}) => {
         validations.errors.valid,
     );
     const [viceNameError, setViceNameError] = useState(
+        validations.errors.valid,
+    );
+    const [representedCountyError, setRepresentedCountyError] = useState(
         validations.errors.valid,
     );
     const [partyError, setPartyError] = useState(validations.errors.valid);
@@ -89,6 +93,8 @@ const Mayor = ({navigation}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, campaignName, viceName, party, number, id]);
 
+    const {office} = route.params;
+
     async function handleRegister() {
         try {
             setIsLoading(true);
@@ -99,7 +105,7 @@ const Mayor = ({navigation}) => {
                 displayName: name,
                 photoURL: downloadUrl,
             });
-            const ref = database().ref('/candidates/mayor');
+            const ref = database().ref(`/candidates/${office}`);
             const key = ref.push().key;
             const candidate = getCandidate(user.uid, key, downloadUrl);
             ref.child(key).set(candidate);
@@ -125,18 +131,33 @@ const Mayor = ({navigation}) => {
     }
 
     function getCandidate(uId, key, photo) {
-        return {
-            name: name.trim(),
-            campaignName: campaignName.trim(),
-            viceName: viceName.trim(),
-            party: party.trim(),
-            number: number.trim(),
-            id: id.trim(),
-            about: about.trim(),
-            uId,
-            candidateKey: key,
-            photo,
-        };
+        if (office === 'mayor') {
+            return {
+                name: name.trim(),
+                campaignName: campaignName.trim(),
+                viceName: viceName.trim(),
+                party: party.trim(),
+                number: number.trim(),
+                id: id.trim(),
+                about: about.trim(),
+                uId,
+                candidateKey: key,
+                photo,
+            };
+        } else {
+            return {
+                name: name.trim(),
+                campaignName: campaignName.trim(),
+                representedCounty: representedCounty.trim(),
+                party: party.trim(),
+                number: number.trim(),
+                id: id.trim(),
+                about: about.trim(),
+                uId,
+                candidateKey: key,
+                photo,
+            };
+        }
     }
 
     function handleImagePicker() {
@@ -218,33 +239,67 @@ const Mayor = ({navigation}) => {
                     autoCorrect={false}
                     autoCapitalize="words"
                 />
+                {viceNameError === validations.errors.valid &&
+                    office === 'mayor' && <Text>Nome do vice</Text>}
+                {viceNameError === validations.errors.invalidName &&
+                    office === 'mayor' && (
+                        <Text color="#f00" size="8px">
+                            {viceNameError.message}
+                        </Text>
+                    )}
+                {office === 'mayor' && (
+                    <Input
+                        testID="viceName-input"
+                        placeholder="Nome do vice"
+                        border={viceNameError.border}
+                        value={regex.removeUnnecessaryBlankSpaces(viceName)}
+                        onChangeText={(viceName) => {
+                            handleInputChange(
+                                viceName,
+                                setViceName,
+                                validations.isName,
+                                viceNameError,
+                                setViceNameError,
+                                validations.errors.invalidName,
+                            );
+                        }}
+                        autoCorrect={false}
+                        autoCapitalize="words"
+                    />
+                )}
 
-                {viceNameError === validations.errors.valid && (
-                    <Text>Nome do vice</Text>
+                {representedCountyError === validations.errors.valid &&
+                    office === 'cityCouncilor' && (
+                        <Text>Bairro representado</Text>
+                    )}
+                {representedCountyError === validations.errors.invalidName &&
+                    office === 'cityCouncilor' && (
+                        <Text color="#f00" size="8px">
+                            {representedCountyError.message}
+                        </Text>
+                    )}
+                {office === 'cityCouncilor' && (
+                    <Input
+                        testID="represented-county-input"
+                        placeholder="Bairro representado"
+                        border={representedCountyError.border}
+                        value={regex.removeUnnecessaryBlankSpaces(
+                            representedCounty,
+                        )}
+                        onChangeText={(rc) => {
+                            handleInputChange(
+                                rc,
+                                setRepresentedCounty,
+                                validations.isName,
+                                representedCountyError,
+                                setRepresentedCountyError,
+                                validations.errors.invalidName,
+                            );
+                        }}
+                        autoCorrect={false}
+                        autoCapitalize="words"
+                    />
                 )}
-                {viceNameError === validations.errors.invalidName && (
-                    <Text color="#f00" size="8px">
-                        {viceNameError.message}
-                    </Text>
-                )}
-                <Input
-                    testID="viceName-input"
-                    placeholder="Nome do vice"
-                    border={viceNameError.border}
-                    value={regex.removeUnnecessaryBlankSpaces(viceName)}
-                    onChangeText={(viceName) => {
-                        handleInputChange(
-                            viceName,
-                            setViceName,
-                            validations.isName,
-                            viceNameError,
-                            setViceNameError,
-                            validations.errors.invalidName,
-                        );
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                />
 
                 {partyError === validations.errors.valid && (
                     <Text>Sigla do partido</Text>

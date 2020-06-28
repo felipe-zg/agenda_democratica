@@ -95,12 +95,7 @@ const SignUp = ({route, navigation}) => {
                     setIsLoading(false);
                     if (userType === 'candidate') {
                         saveUser(office);
-                        const nextPage =
-                            office == 'mayor'
-                                ? 'MayorRegisterScreen'
-                                : 'CandidateDashboardScreen'; //city councilor screen
-                        navigation.popToTop();
-                        navigation.replace(nextPage);
+                        navigation.replace('MayorRegisterScreen', {office});
                     } else {
                         saveUser(userType);
                         navigation.replace('VoterRegisterScreen');
@@ -268,7 +263,7 @@ const SignUp = ({route, navigation}) => {
                                     office === 'mayor' ? 'checked' : 'unchecked'
                                 }
                                 uncheckedColor="#fff"
-                                onPress={setOffice}
+                                onPress={() => setOffice('mayor')}
                             />
                             <Text>Sou candidato a prefeito</Text>
                         </RadioButtonView>
@@ -281,7 +276,7 @@ const SignUp = ({route, navigation}) => {
                                         : 'unchecked'
                                 }
                                 uncheckedColor="#fff"
-                                onPress={setOffice}
+                                onPress={() => setOffice('cityCouncilor')}
                             />
                             <Text>Sou candidato a vereador</Text>
                         </RadioButtonView>
