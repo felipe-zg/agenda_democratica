@@ -112,6 +112,7 @@ const Mayor = ({route, navigation}) => {
             Toast.show('Bem-vindo(a) ao agenda democrática');
             setIsLoading(false);
             dispatch(startCandidate(candidate));
+            //something worng is happening here
             navigation.replace('CandidatePostsScreen');
         } catch (e) {
             setIsLoading(false);
