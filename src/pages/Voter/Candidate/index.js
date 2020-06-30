@@ -192,13 +192,18 @@ export default function Candidate({route, navigation}) {
                     </FollowButton>
                 </Header>
                 {renderInfo('Candidato', candidate.campaignName)}
-                {renderInfo('Vice', candidate.viceName)}
+                {candidate.office == 'mayor' &&
+                    renderInfo('Vice', candidate.viceName)}
+                {candidate.office === 'cityCouncilor' &&
+                    renderInfo('Bairro', candidate.representedCounty)}
                 {renderInfo('Partido', candidate.party)}
                 {renderInfo('Número', candidate.number)}
                 {renderInfo('Sobre', candidate.about)}
-                <Text padding="20px" size="18px">
-                    Eventos
-                </Text>
+                {events && events.length > 0 && (
+                    <Text padding="20px" size="18px">
+                        Eventos
+                    </Text>
+                )}
                 {events && renderEvents()}
                 {events && events.length > 1 && (
                     <Link

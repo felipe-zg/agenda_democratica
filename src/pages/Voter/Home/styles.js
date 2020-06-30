@@ -21,7 +21,8 @@ export const Photo = styled.Image`
 `;
 
 export const CandidatesView = styled.View`
-    padding: 20px 0;
+    padding: 20px 0 0 0;
+    margin-bottom: 15px;
     background: #363636;
 `;
 

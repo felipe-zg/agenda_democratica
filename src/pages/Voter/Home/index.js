@@ -25,23 +25,44 @@ const Home = ({navigation}) => {
     const followedCandidates = useSelector((state) => state.FollowedCandidates);
     const likedPosts = useSelector((state) => state.LikedPosts);
     const [mayors, setMayors] = useState(null);
+    const [cityCouncilors, setCityCouncilors] = useState(null);
     const [posts, setPosts] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
         async function getMayors() {
-            var candidates = [];
+            var returnerMayors = [];
             await database()
                 .ref('candidates/mayor')
                 .orderByKey()
                 .once('value', (snapShot) => {
                     if (snapShot.val()) {
                         snapShot.forEach((childSnapshot) => {
-                            candidates = [...candidates, childSnapshot.val()];
+                            returnerMayors = [
+                                ...returnerMayors,
+                                childSnapshot.val(),
+                            ];
                         });
                     }
                 });
-            setMayors(candidates);
+            setMayors(returnerMayors);
+        }
+        async function getCityCouncilors() {
+            var returnedCityCouncilors = [];
+            await database()
+                .ref('candidates/cityCouncilor')
+                .orderByKey()
+                .once('value', (snapShot) => {
+                    if (snapShot.val()) {
+                        snapShot.forEach((childSnapshot) => {
+                            returnedCityCouncilors = [
+                                ...returnedCityCouncilors,
+                                childSnapshot.val(),
+                            ];
+                        });
+                    }
+                });
+            setCityCouncilors(returnedCityCouncilors);
         }
         async function getFollowedCandidatesPosts() {
             followedCandidates.map(async (candidate) => {
@@ -68,6 +89,9 @@ const Home = ({navigation}) => {
         }
         if (!mayors) {
             getMayors();
+        }
+        if (!cityCouncilors) {
+            getCityCouncilors();
         }
         if (!posts) {
             getFollowedCandidatesPosts();
@@ -120,8 +144,9 @@ const Home = ({navigation}) => {
         return isLiked;
     }
 
-    function renderMayors() {
-        return mayors.map((mayor) => {
+    function renderMayors(office) {
+        const list = office === 'mayor' ? mayors : cityCouncilors;
+        return list.map((mayor) => {
             return (
                 <TouchableOpacity
                     key={mayor.candidateKey}
@@ -142,7 +167,6 @@ const Home = ({navigation}) => {
             );
         });
     }
-    function renderCityCouncilors() {}
     return (
         <Container>
             <Header>
@@ -161,12 +185,20 @@ const Home = ({navigation}) => {
                     </Text>
                     {mayors && (
                         <CandidatesRow horizontal={true}>
-                            {renderMayors()}
+                            {renderMayors('mayor')}
                         </CandidatesRow>
                     )}
                 </CandidatesView>
-                <Text size="18px">Vereadores</Text>
-                <CandidatesRow>{renderCityCouncilors()}</CandidatesRow>
+                <CandidatesView>
+                    <Text size="18px" padding="0 0 0 20px;">
+                        Vereadores
+                    </Text>
+                    {cityCouncilors && (
+                        <CandidatesRow horizontal={true}>
+                            {renderMayors('cityCouncilor')}
+                        </CandidatesRow>
+                    )}
+                </CandidatesView>
                 {posts && <View>{renderPosts()}</View>}
             </ScrollView>
         </Container>

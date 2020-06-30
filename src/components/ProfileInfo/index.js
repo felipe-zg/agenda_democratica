@@ -26,7 +26,6 @@ const ProfileInfo = ({
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [infoValue, setInfoValue] = useState(info);
-    const [isDisabled, setIsDisabled] = useState(false);
     const [valueError, setValueError] = useState(errors.valid);
     const [iconColor, setIconColor] = useState('#00f');
     const dispatch = useDispatch();
@@ -38,6 +37,11 @@ const ProfileInfo = ({
         setIsEditing(false);
         try {
             const value = infoValue.trim();
+            if (value === '') {
+                Toast.show('A informação não pode ser vazia');
+                setInfoValue(info);
+                return;
+            }
             database()
                 .ref(`candidates/${candidateOffice}/${candidateKey}`)
                 .child(fieldRef)
@@ -78,11 +82,6 @@ const ProfileInfo = ({
                     returnKeyType="send"
                     onSubmitEditing={handleUpdate}
                     onChangeText={(value) => {
-                        if (value === '') {
-                            setIsDisabled(true);
-                        } else {
-                            setIsDisabled(false);
-                        }
                         handleInputChange(
                             value,
                             setInfoValue,
@@ -94,7 +93,7 @@ const ProfileInfo = ({
                     }}
                 />
                 <Touch
-                    disabled={valueError === errors.valid ? false : isDisabled}
+                    disabled={valueError === errors.valid ? false : true}
                     onPress={() =>
                         isEditing ? handleUpdate() : handleFocusInput()
                     }>
