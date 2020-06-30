@@ -19,6 +19,14 @@ export const isParty = (party) => {
     return party.trim().length >= 2;
 };
 
+export const isMayorNumber = (number) => {
+    return number.trim().length === 2;
+};
+
+export const isCityCouncilorNumber = (number) => {
+    return number.trim().length === 5;
+};
+
 //aplicar a lógica correta de valição de número de identificação de candidatura
 export const isId = (id) => {
     return id.trim().length >= 10;

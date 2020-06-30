@@ -24,7 +24,7 @@ const Profile = ({navigation}) => {
     const [isLoading, setIsloading] = useState(false);
 
     const campaignNameRef = useRef();
-    const viceNameRef = useRef();
+    const viceNameOrRepCountyRef = useRef();
     const partyref = useRef();
     const numberRef = useRef();
     const aboutRef = useRef();
@@ -81,15 +81,25 @@ const Profile = ({navigation}) => {
                     inputRef={campaignNameRef}
                     fieldRef="campaignName"
                     candidateKey={candidate.candidateKey}
+                    candidateOffice={candidate.office}
                     multiLine={false}
                     validator={validations.isName}
                     error={validations.errors.invalidName}
                 />
                 <ProfileInfo
-                    info={candidate.viceName}
-                    inputRef={viceNameRef}
-                    fieldRef="viceName"
+                    info={
+                        candidate.office === 'mayor'
+                            ? candidate.viceName
+                            : candidate.representedCounty
+                    }
+                    inputRef={viceNameOrRepCountyRef}
+                    fieldRef={
+                        candidate.office === 'mayor'
+                            ? 'viceName'
+                            : 'representedCounty'
+                    }
                     candidateKey={candidate.candidateKey}
+                    candidateOffice={candidate.office}
                     multiLine={false}
                     validator={validations.isName}
                     error={validations.errors.invalidName}
@@ -99,6 +109,7 @@ const Profile = ({navigation}) => {
                     inputRef={partyref}
                     fieldRef="party"
                     candidateKey={candidate.candidateKey}
+                    candidateOffice={candidate.office}
                     multiLine={false}
                     validator={validations.isParty}
                     error={validations.errors.invalidParty}
@@ -108,10 +119,15 @@ const Profile = ({navigation}) => {
                     inputRef={numberRef}
                     fieldRef="number"
                     type="numeric"
-                    max={2}
+                    max={candidate.office === 'mayor' ? 2 : 5}
                     candidateKey={candidate.candidateKey}
+                    candidateOffice={candidate.office}
                     multiLine={false}
-                    validator={validations.isParty}
+                    validator={
+                        candidate.office === 'mayor'
+                            ? validations.isMayorNumber
+                            : validations.isCityCouncilorNumber
+                    }
                     error={validations.errors.invalidNumber}
                 />
                 <ProfileInfo
@@ -119,6 +135,7 @@ const Profile = ({navigation}) => {
                     inputRef={aboutRef}
                     fieldRef="about"
                     candidateKey={candidate.candidateKey}
+                    candidateOffice={candidate.office}
                     multiLine
                     numRow={5}
                 />

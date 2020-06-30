@@ -124,7 +124,9 @@ const Mayor = ({route, navigation}) => {
         return (
             validations.isFullName(name) &&
             validations.isName(campaignName) &&
-            validations.isName(viceName) &&
+            validations.isName(
+                office === 'mayor' ? viceName : representedCounty,
+            ) &&
             validations.isParty(party) &&
             validations.isParty(number) &&
             validations.isId(id)
@@ -144,6 +146,7 @@ const Mayor = ({route, navigation}) => {
                 uId,
                 candidateKey: key,
                 photo,
+                office,
             };
         } else {
             return {
@@ -157,6 +160,7 @@ const Mayor = ({route, navigation}) => {
                 uId,
                 candidateKey: key,
                 photo,
+                office,
             };
         }
     }
@@ -341,13 +345,17 @@ const Mayor = ({route, navigation}) => {
                     testID="partyNumber-input"
                     placeholder="Número do candidato"
                     border={numberError.border}
-                    maxLength={2}
+                    maxLength={office === 'mayor' ? 2 : 5}
                     value={regex.removeAllBlankSpaces(number)}
                     onChangeText={(number) => {
+                        const validation =
+                            office === 'mayor'
+                                ? validations.isMayorNumber
+                                : validations.isCityCouncilorNumber;
                         handleInputChange(
                             number,
                             setNumber,
-                            validations.isParty,
+                            validation,
                             numberError,
                             setNumberError,
                             validations.errors.invalidNumber,
